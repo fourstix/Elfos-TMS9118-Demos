@@ -107,7 +107,7 @@ WAIT_INTR:  bn1  WAIT_INTR     ; wait for VDP INT active low
             
             ; reset color of target
             mov  ra, SPRITE_POS0+3
-            ldi  COLOR_MAGENTA
+            ldi  COLOR_DARK_RED
             str  ra            ; set color
             req
             lbr  DONE_COLLISION
@@ -276,7 +276,7 @@ SEND_VDP_COLORS:
 
             ; now copy data
             mov  r7, 1800h     ; 6144 bytes
-            ldi  COLOR_BLUE    ; background
+            ldi  COLOR_GRAY    ; background
             str  r2
 NEXT_CLR:   out  VDP_DAT_P     ; VDP will autoincrement VRAM address
             dec  r2
@@ -362,7 +362,7 @@ VREG_SET:   db  2       ; VR0 graphics 2 mode, no ext video
             db  3       ; VR4 Pattern table address 0000h
             db  76h     ; VR5 Sprite attribute table address 3B00h
             db  3       ; VR6 Sprite pattern table address 1800h
-            db  04h     ; Backdrop color blue
+            db  COLOR_GRAY     ; Backdrop color
 
 SPRITE_PAT:
             ; 16x16 target
@@ -382,16 +382,16 @@ END_SPRITE_PAT:
 ; Since each 16x16 sprite takes up 4 8x8 'slots' they are numbered 0&4
 SPRITE_ATTR:
             ;   [Y,   X, Id#, Color]
-             db  88, 120, 0,  COLOR_MAGENTA  ; target
-             db  88,  57, 4,  COLOR_MAGENTA    ; projectile
+             db  88, 120, 0,  COLOR_DARK_RED  ; target
+             db  88,  57, 4,  COLOR_DARK_RED  ; projectile
              db  0D0h              ; Sprite processing terminator
 END_SPRITE_ATTR:
 
 ; dynamic position will be updated in this memory block
 START_SPRITE_DATA:
 ;                Y    X
-SPRITE_POS0: db  88, 120, 0,  COLOR_MAGENTA  ; target
-SPRITE_POS1: db  88,  57, 4,  COLOR_MAGENTA  ; projectile
+SPRITE_POS0: db  88, 120, 0,  COLOR_DARK_RED  ; target
+SPRITE_POS1: db  88,  57, 4,  COLOR_DARK_RED  ; projectile
 TERMINATOR:  db  0D0h
 END_SPRITE_DATA:
 
