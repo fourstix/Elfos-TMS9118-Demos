@@ -8,9 +8,9 @@ These commands were written to run on an [1802-Mini](https://github.com/dmadole/
 
 1802-2 Mini Configuration  
 -------------------------
-# Card Group and Port configuration:
+# Card Groups and Ports:
 <table>
-<tr><th>Group</th><th>Port</th><th>Card</th></tr>
+<tr><th>Group</th><th>Ports</th><th>Card</th></tr>
 <tr><td rowspan = "2">ALL</td><td>1</td><td>Expander</td></tr>
 <tr><td>4</td><td>Front Panel</td></tr>
 <tr><td rowspan = "3">00</td><td>2,3</td><td>Disk</td></tr>
@@ -27,6 +27,9 @@ These commands were written to run on an [1802-Mini](https://github.com/dmadole/
 <tr><td>/EF3</td><td>(none)</td><td>(unused)</td></tr>
 <tr><td>/EF4</td><td>Front Panel</td><td>Input</td></tr>
 </table>
+
+If your configuration is different from the above, edit the vdp.inc file and 
+change the constants to match.  Then re-assemble the code with the updated vdp.inc file.
 
 Elf/OS TMS9118 Demos
 -------------------------------------
@@ -78,11 +81,15 @@ Repository Contents
   * mackaw.asm - Demo to display a test bitmap.
   * mandrill.asm - Demo to display a test bitmap.
   * plotPixel.asm - Demo to display a data plot.
-  * 
+  * saucer.asm - Demo of a flying saucer landing in the desert.
+  * sprites.asm - Demo with five sprites, the last one moving up and down.
+  * showPalette - Demo showing vertical color bars.
+  * spaceship2 - Demo to display color version of the Cosmac spaceship bitmap.
+  * textColors - Demo to display various text and background colors.
 * **/src/include/**  -- Source files for Elf/OS file utilities.
   * ops.inc - Opcode definitions for Asm/02.
   * bios.inc - Bios definitions from Elf/OS
-  * vdp.inc - Video card configuration
+  * vdp.inc - Video card configuration constants
 * **/bin/**  -- Binary files for TMS9118 demo programs.
 * **/lbr/**  -- Library file for TMS9118 demos. (Unpack with Elf/OS lbr command)
   * tms9118.lbr - Library file for TMS9118 demos.
@@ -103,7 +110,7 @@ License Information
   This code is based on programs written by Glenn Jolly.
   
   TMS9118 Demo source and binaries
-  Copyright (c) 2020 by Glenn Jolly
+  Copyright (c) 2021 by Glenn Jolly
   
   Elf/OS 
   Copyright (c) 2004-2022 by Mike Riley
