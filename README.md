@@ -23,9 +23,9 @@ These commands were written to run on an [1802-Mini](https://github.com/dmadole/
 <table>
 <tr><th>Flag</th><th>Card</th><th>Function</th></tr>
 <tr><td>/EF1</td><td>Video</td><td>VDP Interrupt</td></tr>
-<tr><td>/EF2</td><td>Processor</td><td>Serial IO</td></tr>
-<tr><td>/EF3</td><td>(none)</td><td>(unused)</td></tr>
-<tr><td>/EF4</td><td>Front Panel</td><td>Input</td></tr>
+<tr><td>/EF2</td><td>Processor</td><td>PS/2 Keyboard IO</td></tr>
+<tr><td>/EF3</td><td>(none)</td><td>(unassigned)</td></tr>
+<tr><td>/EF4</td><td>Front Panel</td><td>Input Button</td></tr>
 </table>
 
 If your configuration is different from the above, edit the vdp.inc file and 
