@@ -8,7 +8,8 @@ These commands were written to run on an [1802-Mini](https://github.com/dmadole/
 
 1802-2 Mini Configuration  
 -------------------------
-# Card Groups and Ports:
+Card Groups and Ports
+-------------------------
 <table>
 <tr><th>Group</th><th>Ports</th><th>Card</th></tr>
 <tr><td rowspan = "2">ALL</td><td>1</td><td>Expander</td></tr>
@@ -19,7 +20,8 @@ These commands were written to run on an [1802-Mini](https://github.com/dmadole/
 <tr><td>01</td><td>6,7</td><td>Video</td></tr>
 </table>
 
-# External Flags:
+External Flags
+-------------------------
 <table>
 <tr><th>Flag</th><th>Card</th><th>Function</th></tr>
 <tr><td>/EF1</td><td>Video</td><td>VDP Interrupt</td></tr>
