@@ -1,2 +1,139 @@
 # Elfos-TMS9118-Demos
-Elf/OS Demo programs for the 1802-Mini TMS9x18 Video Card
+A set of Elf/OS Demo programs for the [1802-Mini TMS9x18 Video Card](https://github.com/dmadole/1802-Mini-9918-Video) by David Madole. These demos are based on programs originally written by Glen Jolly and posted in the
+files section of the COSMAC ELF Group in the [Glenn Jolly/TMS9118](https://groups.io/g/cosmacelf/files/Glenn%20Jolly/TMS9118) folder at groups.io.  These programs were all assembled into 1802 binary files using the [Asm/02 1802 Assembler](https://github.com/rileym65/Asm-02) by Mike Riley.
+
+Platform  
+--------
+These commands were written to run on an [1802-Mini](https://github.com/dmadole/1802-Mini) with the [1802-Mini TMS9918 Video Card]((https://github.com/dmadole/1802-Mini-9918-Video) created by David Madole.  A lot of information and software for the 1802-Mini can be found in the [COSMAC ELF Group](https://groups.io/g/cosmacelf) at groups.io.
+
+1802-2 Mini Configuration  
+-------------------------
+# Card Group and Port configuration:
+<table>
+<tr><th>Group</th><th>Port</th><th>Card</th></tr>
+<tr><td rowspan = "2">ALL</td><td>1</td><td>Expander</td></tr>
+<tr><td>4</td><td>Front Panel</td></tr>
+<tr><td rowspan = "3">00</td><td>2,3</td><td>Disk</td></tr>
+<tr><td>5</td><td>Clock</td></tr>
+<tr><td>6,7</td><td>UART</td></tr>
+<tr><td>01</td><td>6,7</td><td>Video</td></tr>
+</table>
+
+# External Flags:
+<table>
+<tr><th>Flag</th><th>Card</th><th>Function</th></tr>
+<tr><td>/EF1</td><td>Video</td><td>VDP Interrupt</td></tr>
+<tr><td>/EF2</td><td>Processor</td><td>Serial IO</td></tr>
+<tr><td>/EF3</td><td>(none)</td><td>(unused)</td></tr>
+<tr><td>/EF4</td><td>Front Panel</td><td>Input</td></tr>
+</table>
+
+Elf/OS TMS9118 Demos
+-------------------------------------
+## blank
+This program simply displays a black screen.
+
+## collision
+This program shows how the collision detection works for two sprites. Press Input to end.
+
+## lena
+This program displays a bitmap of the model Lena Forsen.
+
+## mackaw
+This program displays a bitmap of a colorful bird.
+
+## mandrill
+This program displays a bitmap of colorful monkey.
+
+## plotPixel
+This program plots a graph of the sine(x)/x function.
+
+## saucer
+This program displays a desert with a UFO sprite landing. Press Input to end the demo.
+
+## showPalette
+This program displays vertical bars for the palette colors.
+
+## sprites
+This program shows five sprites, the fifth sprite moving up and down behind the band of
+the other 4. The fourth sprite changes color when the fifth passes by. Press Input to end the demo.
+
+## spaceship2
+Displays a color version of the classic Cosmac spaceship by Joseph A Weisbecker. 
+
+## textColors
+Show different text and background color combinations. Press 0 to 9 to change colors and 'x' to exit.
+
+Library Files
+-------------
+The demo files are grouped into an Elf/OS library file *tms9118.lbr* that can be unpacked with the Elf/OS lbr command using the e option to *extract* files. Extract these demo files with the Elf/OS command *lbr e tms9118* 
+
+Repository Contents
+-------------------
+* **/src/**  -- Common source files for assembling Elf/OS utilities.
+  * asm.bat - Windows batch file to assemble source file with Asm/02 to create binary file. Use the command *asm xxx.asm* to assemble the xxx.asm file.
+  * blank.asm - Demo to blank the display.
+  * collision.asm - Demo to show sprite collision detection.
+  * lena.asm - Demo to display a test bitmap.
+  * mackaw.asm - Demo to display a test bitmap.
+  * mandrill.asm - Demo to display a test bitmap.
+  * plotPixel.asm - Demo to display a data plot.
+  * 
+* **/src/include/**  -- Source files for Elf/OS file utilities.
+  * ops.inc - Opcode definitions for Asm/02.
+  * bios.inc - Bios definitions from Elf/OS
+  * vdp.inc - Video card configuration
+* **/bin/**  -- Binary files for TMS9118 demo programs.
+* **/lbr/**  -- Library file for TMS9118 demos. (Unpack with Elf/OS lbr command)
+  * tms9118.lbr - Library file for TMS9118 demos.
+
+License Information
+  -------------------
+  
+  This code is public domain under the MIT License, but please buy me a beverage
+  if you use this and we meet someday (Beerware).
+  
+  References to any products, programs or services do not imply
+  that they will be available in all countries in which their respective owner operates.
+  
+  Any company, product, or services names may be trademarks or services marks of others.
+  
+  All libraries used in this code are copyright their respective authors.
+  
+  This code is based on programs written by Glenn Jolly.
+  
+  TMS9118 Demo source and binaries
+  Copyright (c) 2020 by Glenn Jolly
+  
+  Elf/OS 
+  Copyright (c) 2004-2022 by Mike Riley
+  
+  Asm/02 1802 Assembler
+  Copyright (c) 2004-2022 by Mike Riley
+  
+  The 1802-Mini Hardware
+  Copyright (c) 2021-2022 by David Madole
+   
+  Many thanks to the original authors for making their designs and code available as open source.
+   
+  This code, firmware, and software is released under the [MIT License](http://opensource.org/licenses/MIT).
+  
+  The MIT License (MIT)
+  
+  Copyright (c) 2022 by Gaston Williams
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  **THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.**
