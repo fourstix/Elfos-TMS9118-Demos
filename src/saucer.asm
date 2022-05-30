@@ -61,16 +61,15 @@ start:      org     2000h
                       ; Build information
               
   db      5+80h              ; month
-  db      25                 ; day
+  db      30                 ; day
   dw      2022               ; year
-  dw      2                  ; build
+  dw      3                  ; build
               
-  db      'Copyright 2021 by Glenn Jolly',0
+  db      'Copyright 2022 by Gaston Williams',0
               
   
   
 main:       call SET_GROUP
-            call SAVE_IE
             call INIT_VREG
             call CLEAR_VRAM
             call SEND_VDP_PATTERN
@@ -100,13 +99,9 @@ main:       call SET_GROUP
 
             mov  rc, 0         ; init frame counter
             
-            sex r3             ; set x = p for disable instruction
-            dis                ; x=2, p=3 and disable interrupts
-            db 23H             ; value for x=2, p=3
-            call SET_INTR      ; enable video interrupt after painting screen
-
-NEXT_FRAME: inp  VDP_REG_P     ; clear any existing VDP interrupt
-WAIT_INTR:  bn1  WAIT_INTR     ; important - wait for VDP INT active low
+NEXT_FRAME: inp  VDP_REG_P     ; read VDP status, D holds status byte
+            shl                ; check msb to see if painting finished
+            bnf  NEXT_FRAME    ; wait for screen to be painted
 
             ; redraw but skip every other move update - effective 30Hz display
             ; must redraw else successive inp/waits will hang
@@ -168,30 +163,8 @@ QUIT:       bn4     QUIT          ; wait for input to exit
             db      081h
             sex     r2            ; set x back to stack pointer
             call RESET_GROUP      ; set group back to default
-            CALL RESTORE_IE       ; set int back to original state
             rtn                   ; return to Elf/OS
             
-; -------------------------------------------------------------------
-;            Save IE (1802 INT) state
-; -------------------------------------------------------------------
-SAVE_IE:      mov  rf, ie_flag    ; point rf to flag location
-              ldi  0FFh           ; assume true
-              lsie                ; long skip if ie true
-              ldi  00h            ; set false, skipped if true
-              str  rf             ; save in memory
-              rtn      
-
-; -------------------------------------------------------------------
-;            Restore IE (1802 INT) state
-; -------------------------------------------------------------------            
-RESTORE_IE:   mov rf, ie_flag    ; point rf to flag location
-              ldn rf             ; Get saved value of ie
-              lbz RI_Done        ; if ie false, just return
-              sex r3             ; x = p for ret instruction
-              ret                ; Turn interrupts back on
-              db 23H             ; with x=2, p=3
-RI_Done:      rtn 
-
 ; -------------------------------------------------------------------
 ;            Set the Expansion Group for Video Card
 ; -------------------------------------------------------------------
@@ -235,19 +208,6 @@ NEXTREG:    lda  rf
             smi  88h
             lbnz NEXTREG
             rtn
-; ---------------------------------------------------------------------
-; command VDP register VR1 to enable interrupt line in graphics mode 2
-; ---------------------------------------------------------------------
-SET_INTR:   ldi  0E2h
-            str  r2
-            out  VDP_REG_P
-            dec  r2
-            ldi  81h           ; VR1
-            str  r2
-            out  VDP_REG_P
-            dec  r2
-            rtn
-
 ; -----------------------------------------------------------
 ;         Select VDP destination address for sending
 ; -----------------------------------------------------------
@@ -428,8 +388,6 @@ DL1:        dec  rf
            ; default VDP register settings for graphics II mode
 VREG_SET:   db  2       ; VR0 graphics 2 mode, no ext video
             db  0C2h    ; VR1 16k vram, display enabled, intr disabled; 16x16 sprites
-            ;db  082h    ; VR1 16k vram, display disabled, intr disabled; 16x16 sprites
-            ;db  0E2h    ; VR1 16k vram, display enabled, intr enabled; 16x16 sprites
             db  0Eh     ; VR2 Name table address 3800h
             db  0FFh    ; VR3 Color table address 2000h
             db  3       ; VR4 Pattern table address 0000h
@@ -2273,6 +2231,5 @@ START_COLORTABLE:
             db  01dh, 01dh, 01dh, 01dh, 09dh, 019h, 019h, 019h, 
             db  01dh, 01dh, 01dh, 01dh, 09dh, 0d9h, 0d9h, 019h
 END_COLORTABLE:
-ie_flag:    db   00h
 
 END:

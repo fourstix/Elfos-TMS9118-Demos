@@ -62,7 +62,7 @@ start:      org     2000h
                                                     
             ; Build information                          
               db      5+80h              ; month
-              db      26                 ; day
+              db      30                 ; day
               dw      2022               ; year
               dw      2                  ; build
                           
@@ -76,9 +76,7 @@ main:      ; init sprite position data
             sep  scall
             dw   f_memcpy      ; rd <- rf (rc bytes)
 
-            call SET_GROUP  
-            call SAVE_IE
-            call DISABLE_IE            
+            call SET_GROUP            
             call INIT_VREG
             call CLEAR_VRAM
             call SEND_VDP_COLORS     ; just single background color
@@ -92,18 +90,22 @@ main:      ; init sprite position data
 ; -----------------------------------------------------------
 ;                   Command loop
 ; -----------------------------------------------------------
-            mov  rc, 0         ; init frame counter
+            mov  rc, 0        ; init frame counter
+            req               ; make sure q is off initially
+            
 SET_POSITION_PTR:
             mov  rb, PROJECTILE_SPRITE_XPOS
 
-NEXT_FRAME: inp  VDP_REG_P     ; clear any existing VDP interrupt, D holds status
-            ;plo  r7            ; save status
-
-WAIT_INTR:  bn1  WAIT_INTR     ; wait for VDP INT active low
-        
-            ;glo  r7
-            ani  020h          ; test for collision flag
-            lbnz COLLISION     ; collision flag set so change color of target
+NEXT_FRAME: inp  VDP_REG_P    ; READ VDP status, D holds status byte
+            plo  r7           ; save status byte for frame test
+            ani  020h         ; test for collision flag
+            bz   CHK_FRAME    
+            seq               ; set Q if a collision occurred
+CHK_FRAME:  glo  r7           ; get status byte to test for frame 
+            shl               ; check msb to see if painting finished
+            bnf  NEXT_FRAME   ; wait for screen to be painted            
+                       
+            lbq  COLLISION    ; test Q to see if collision occurred during frame
             
             ; reset color of target
             mov  ra, SPRITE_POS0+3
@@ -115,8 +117,7 @@ WAIT_INTR:  bn1  WAIT_INTR     ; wait for VDP INT active low
             ; change color of target to black at collision
 COLLISION:  mov  ra, SPRITE_POS0+3
             ldi  COLOR_BLACK
-            str  ra            ; set color
-            seq            
+            str  ra            ; set color                        
             
 DONE_COLLISION: ; user input for exit            
             b4  QUIT             ; wait for input to exit             
@@ -132,12 +133,12 @@ MOVE_SPRITES:
 UPDATE_POS: call SPRITE_DAT
             dw   SPRITE_POS0
             inc  rc
+            req                 ; clear collision flag after move
             lbr  NEXT_FRAME
 
-QUIT:       CALL RESET_VDP        ; reset video to turn of vdp interrupt
-            CALL RESET_GROUP      ; set group back to default
-            CALL RESTORE_IE       ; restore 1802 int back to original state
-            req
+QUIT:       CALL RESET_VDP      ; reset video to turn of vdp interrupt
+            CALL RESET_GROUP    ; set group back to default
+            req                 ; turn Q off
             rtn
             
 ; -------------------------------------------------------------------
@@ -150,37 +151,7 @@ RESET_VDP:    sex     r3            ; x = p for VDP out
               db      081h
               sex     r2            ; set x back to stack pointer
               rtn                 
-
-; -------------------------------------------------------------------
-;            Save IE state to restore later
-; -------------------------------------------------------------------
-SAVE_IE:      mov  rf, ie_flag    ; point rf to flag location
-              ldi  0FFh           ; assume true
-              lsie                ; long skip if ie true
-              ldi  00h            ; set false, skipped if true
-              str  rf             ; save in memory
-              rtn                 
-                 
-; -------------------------------------------------------------------
-;            Restore IE (1802 INT state flag)
-; -------------------------------------------------------------------
             
-RESTORE_IE:   mov rf, ie_flag    ; point rf to flag location
-              ldn rf             ; Get saved value of ie
-              lbz RI_Done        ; if ie false, just return
-              sex r3             ; x = p for ret instruction
-              ret                ; Turn interrupts back on
-              db 23H             ; with x=2, p=3
-RI_Done:      rtn 
-
-; -------------------------------------------------------------------
-;            Disable IE (1802 Interrupts)
-; -------------------------------------------------------------------
-DISABLE_IE:   sex r3             ; x = p for dis instruction
-              dis                ; Turn interrupts off
-              db 23H             ; with x=2, p=3
-              rtn
-                
 ; -------------------------------------------------------------------
 ;            Set the Expansion Group for Video Card
 ; -------------------------------------------------------------------
@@ -355,8 +326,8 @@ NEXT_ATR:   lda  rf
 
             ; default VDP register settings for graphics II mode
 VREG_SET:   db  2       ; VR0 graphics 2 mode, no ext video
-            ;db  0C2h    ; VR1 16k vram, display enabled, intr disabled; 16x16 sprites
-            db  0E2h    ; VR1 16k vram, display enabled, intr enabled; 16x16 sprites
+            db  0C2h    ; VR1 16k vram, display enabled, intr disabled; 16x16 sprites
+            ;db  0E2h    ; VR1 16k vram, display enabled, intr enabled; 16x16 sprites
             db  0Eh     ; VR2 Name table address 3800h
             db  0FFh    ; VR3 Color table address 2000h
             db  3       ; VR4 Pattern table address 0000h
@@ -403,5 +374,4 @@ PROJECTILE_SPRITE_XPOS:
             db   105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
             db   121, 122, 123, 124, 125, 126, 127, 127, 127, 0,   0
 
-ie_flag:    db 00h
 END: 

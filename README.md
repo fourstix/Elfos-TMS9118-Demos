@@ -25,7 +25,7 @@ External Flags
 <table>
 <tr><th>Flag</th><th>Card</th><th>Function</th></tr>
 <tr><td>/EF1</td><td>Video</td><td>VDP Interrupt</td></tr>
-<tr><td>/EF2</td><td>Processor</td><td>PS/2 Keyboard IO</td></tr>
+<tr><td>/EF2</td><td>Processor</td><td>Software IO</td></tr>
 <tr><td>/EF3</td><td>(none)</td><td>(unassigned)</td></tr>
 <tr><td>/EF4</td><td>Front Panel</td><td>Input Button</td></tr>
 </table>
@@ -40,6 +40,10 @@ This program simply displays a black screen.
 
 ## collision
 This program shows how the collision detection works for two sprites. Press Input to end.
+
+## fivesprites
+This program shows five sprites, the fifth sprite moving up and down behind the band of
+the other 4. The fourth sprite changes color when the fifth passes by. Press Input to end the demo.
 
 ## lena
 This program displays a bitmap of the model Lena Forsen.
@@ -59,10 +63,6 @@ This program displays a desert with a UFO sprite landing. Press Input to end the
 ## showPalette
 This program displays vertical bars for the palette colors.
 
-## sprites
-This program shows five sprites, the fifth sprite moving up and down behind the band of
-the other 4. The fourth sprite changes color when the fifth passes by. Press Input to end the demo.
-
 ## spaceship2
 Displays a color version of the classic Cosmac spaceship by Joseph A Weisbecker. 
 
@@ -79,12 +79,12 @@ Repository Contents
   * asm.bat - Windows batch file to assemble source file with Asm/02 to create binary file. Use the command *asm xxx.asm* to assemble the xxx.asm file.
   * blank.asm - Demo to blank the display.
   * collision.asm - Demo to show sprite collision detection.
+  * fivesprites.asm - Demo with five sprites, the last one moving up and down.
   * lena.asm - Demo to display a test bitmap.
   * mackaw.asm - Demo to display a test bitmap.
   * mandrill.asm - Demo to display a test bitmap.
   * plotPixel.asm - Demo to display a data plot.
   * saucer.asm - Demo of a flying saucer landing in the desert.
-  * sprites.asm - Demo with five sprites, the last one moving up and down.
   * showPalette - Demo showing vertical color bars.
   * spaceship2 - Demo to display color version of the Cosmac spaceship bitmap.
   * textColors - Demo to display various text and background colors.

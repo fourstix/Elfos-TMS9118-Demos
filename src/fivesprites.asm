@@ -1,10 +1,9 @@
 ; -------------------------------------------------------------------
-;                          sprite5th
+;                          fivesprites
 ;
 ; Demo of a moving 5th sprite, as it passes line of 4 sprites it
-; blanks out, and the fourth sprite changes color. The color change is
-; is simply used as an indicator, not a property of the 5th sprite
-; behavior.  Press input to exit.
+; blanks out, and the fourth sprite changes color. These changes are
+; made based on the status byte's 5th sprite flag. Press input to exit.
 ;
 ; Program for 1802-Mini with the TMS9118 Color Video Card
 ; published by David Madole:
@@ -64,7 +63,7 @@ start:    org     2000h
                                                   
           ; Build information                          
             db      5+80h              ; month
-            db      26                 ; day
+            db      30                 ; day
             dw      2022               ; year
             dw      2                  ; build
                         
@@ -78,9 +77,7 @@ main:           ; init sprite position data
             sep  scall
             dw   f_memcpy      ; rd <- rf (rc bytes)
 
-            call SET_GROUP  
-            call SAVE_IE
-            call DISABLE_IE            
+            call SET_GROUP              
             call INIT_VREG
             call CLEAR_VRAM
             call SEND_VDP_COLORS     ; no color table per se, just poke single color
@@ -95,21 +92,20 @@ main:           ; init sprite position data
 ;                   Command loop
 ; -----------------------------------------------------------
             mov  rc, 0         ; init frame counter
+            req                ; make sure Q is off         
 SET_POSITION_PTR:
             mov  rb, FIFTH_SPRITE_YPOS
 
-NEXT_FRAME: inp  VDP_REG_P     ; clear any existing VDP interrupt, D holds status
-            ;plo  r7            ; save status
-
-WAIT_INTR:  bn1  WAIT_INTR     ; wait for VDP INT active low
-
-            ; pulse for frame time measurement
-            ;seq
-            ;req
-
-            ;glo  r7
-            smi  0C4h          ; test for 5th sprite flag
-            lbz FLAG5          ; 5th sprite flag set so change color of 4th ball
+NEXT_FRAME: inp  VDP_REG_P     ; read VDP status, D holds status byte
+            plo  r7            ; save status byte for frame test
+            ani  040h          ; check fifth sprite bit
+            bz   CHK_FRAME
+            seq                ; set 5th sprite flag (Q)
+CHK_FRAME:  glo  r7            ; get status byte and test 
+            shl                ; check msb to see if painting finished
+            bnf  NEXT_FRAME    ; wait for screen to be painted
+            
+            lbq FLAG5          ; if 5th sprite flag set, change color of 4th ball
             
             ; reset color of 4th ball back to white
             mov  ra, SPRITE_POS3+3
@@ -121,9 +117,6 @@ WAIT_INTR:  bn1  WAIT_INTR     ; wait for VDP INT active low
 FLAG5:      mov  ra, SPRITE_POS3+3
             ldi  COLOR_MAGENTA ; magenta
             str  ra            ; set color
-            ; sep  scall
-            ; dw   f_inmsg
-            ; db   '  5th sprite!', 13,10,0
 
 DONE_5FLAG: ; user input for exit
             b4  QUIT          ; exit if input typed
@@ -145,11 +138,12 @@ MOVE_SPRITES:
 UPDATE_POS: call SPRITE_DAT
             dw   SPRITE_POS0
             inc  rc
+            req                   ; clear 5th sprite flag after move
             lbr  NEXT_FRAME
 
 QUIT:       CALL RESET_VDP        ; reset video to turn of vdp interrupt
             CALL RESET_GROUP      ; set group back to default
-            CALL RESTORE_IE       ; restore 1802 int back to original state
+            req                   ; make sure Q is off
             rtn
 
 ; -------------------------------------------------------------------
@@ -163,36 +157,6 @@ RESET_VDP:    sex     r3            ; x = p for VDP out
               sex     r2            ; set x back to stack pointer
               rtn                 
 
-; -------------------------------------------------------------------
-;            Save IE (1802 INT) state
-; -------------------------------------------------------------------
-SAVE_IE:      mov  rf, ie_flag    ; point rf to flag location
-              ldi  0FFh           ; assume true
-              lsie                ; long skip if ie true
-              ldi  00h            ; set false, skipped if true
-              str  rf             ; save in memory
-              rtn                 
-                 
-; -------------------------------------------------------------------
-;            Restore IE (1802 INT) state
-; -------------------------------------------------------------------
-            
-RESTORE_IE:   mov rf, ie_flag    ; point rf to flag location
-              ldn rf             ; Get saved value of ie
-              lbz RI_Done        ; if ie false, just return
-              sex r3             ; x = p for ret instruction
-              ret                ; Turn interrupts back on
-              db 23H             ; with x=2, p=3
-RI_Done:      rtn 
-
-; -------------------------------------------------------------------
-;            Disable IE (1802 Interrupts)
-; -------------------------------------------------------------------
-DISABLE_IE:   sex r3             ; x = p for dis instruction
-              dis                ; Turn interrupts off
-              db 23H             ; with x=2, p=3
-              rtn
-                
 ; -------------------------------------------------------------------
 ;            Set the Expansion Group for Video Card
 ; -------------------------------------------------------------------
@@ -366,8 +330,8 @@ NEXT_ATR:   lda  rf
         
             ; default VDP register settings for graphics II mode
 VREG_SET:   db  2       ; VR0 graphics 2 mode, no ext video
-            ;db  0C2h    ; VR1 16k vram, display enabled, intr disabled; 16x16 sprites
-            db  0E2h    ; VR1 16k vram, display enabled, intr enabled; 16x16 sprites
+            db  0C2h    ; VR1 16k vram, display enabled, intr disabled; 16x16 sprites
+            ;db  0E2h    ; VR1 16k vram, display enabled, intr enabled; 16x16 sprites
             db  0Eh     ; VR2 Name table address 3800h
             db  0FFh    ; VR3 Color table address 2000h
             db  3       ; VR4 Pattern table address 0000h
@@ -441,5 +405,4 @@ FIFTH_SPRITE_YPOS:
             db    72,  71,  70,  69,  68,  67,  66,  65,  64,  63,  62,  61,  60,  59,  58,  57,
             db     0,   0
 
-ie_flag:    db 00h
 END:
