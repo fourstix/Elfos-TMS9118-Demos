@@ -1,9 +1,8 @@
 ; -------------------------------------------------------------------
-;                          fivesprites
+;                      collision
 ;
-; Demo of a moving 5th sprite, as it passes line of 4 sprites it
-; blanks out, and the fourth sprite changes color. These changes are
-; made based on the status byte's 5th sprite flag. Press input to exit.
+; Demo of sprite collision detection, as a projectile hits 
+; a target the target changes color.  Press input to exit.
 ;
 ; Program for 1802-Mini with the TMS9118 Color Video Card
 ; published by David Madole:
@@ -11,6 +10,7 @@
 ;      https://github.com/dmadole/1802-Mini
 ;
 ; This program uses the TMS9118 graphics mode 2 for 'bitmap' display
+;
 ; -------------------------------------------------------------------
 ; *** Based on software written by Glenn Jolly
 ; *** Original author copyright notice:
@@ -50,37 +50,36 @@
 #include    include/bios.inc
 #include    include/ops.inc
 #include    include/vdp.inc
+    
+            ; Executable program header
+            org     2000h - 6
+              dw      start
+              dw      end-start
+              dw      start
+            
+start:      org     2000h
+              br      main
+                                                    
+            ; Build information                          
+              db      5+80h              ; month
+              db      31                 ; day
+              dw      2022               ; year
+              dw      2                  ; build
+                          
+              db      'Copyright 2022 by Gaston Williams',0
+                          
 
-
-          ; Executable program header
-          org     2000h - 6
-            dw      start
-            dw      end-start
-            dw      start
-
-start:    org     2000h
-            br      main
-                                                  
-          ; Build information                          
-            db      5+80h              ; month
-            db      30                 ; day
-            dw      2022               ; year
-            dw      2                  ; build
-                        
-            db      'Copyright 2021 by Gaston Williams',0
-              
-
-main:           ; init sprite position data
+main:      ; init sprite position data
             mov  rf, SPRITE_ATTR
             mov  rd, START_SPRITE_DATA
             mov  rc, END_SPRITE_ATTR-SPRITE_ATTR
             sep  scall
             dw   f_memcpy      ; rd <- rf (rc bytes)
 
-            call SET_GROUP              
+            call SET_GROUP            
             call INIT_VREG
             call CLEAR_VRAM
-            call SEND_VDP_COLORS     ; no color table per se, just poke single color
+            call SEND_VDP_COLORS     ; just single background color
             call SEND_VDP_NAME
 
             call SPRITE_PIX    ; pattern data
@@ -91,45 +90,43 @@ main:           ; init sprite position data
 ; -----------------------------------------------------------
 ;                   Command loop
 ; -----------------------------------------------------------
-            mov  rc, 0         ; init frame counter
-            req                ; make sure Q is off         
+            mov  rc, 0        ; init frame counter
+            
 SET_POSITION_PTR:
-            mov  rb, FIFTH_SPRITE_YPOS
+            mov  rb, PROJECTILE_SPRITE_XPOS
+            
+NEXT_FRAME: ldi  0            ; clear accumulated status 
+            plo  r7           ; save for frame updates
 
-NEXT_FRAME: inp  VDP_REG_P     ; read VDP status, D holds status byte
-            plo  r7            ; save status byte for frame test
-            ani  040h          ; check fifth sprite bit
-            bz   CHK_FRAME
-            seq                ; set 5th sprite flag (Q)
-CHK_FRAME:  glo  r7            ; get status byte and test 
-            shl                ; check msb to see if painting finished
-            bnf  NEXT_FRAME    ; wait for screen to be painted
-            
-            lbq FLAG5          ; if 5th sprite flag set, change color of 4th ball
-            
-            ; reset color of 4th ball back to white
-            mov  ra, SPRITE_POS3+3
-            ldi  COLOR_WHITE   ; white
+CHK_FRAME:  inp  VDP_REG_P    ; READ VDP status, M(X) holds status byte
+            glo  r7           ; get accumulated status
+            or                ; accumulate bits that turn true during painting
+            plo  r7           ; save for next check
+
+            shl               ; check msb to see if painting finished
+            bnf  CHK_FRAME    ; wait for screen to be painted            
+                       
+            glo  r7           ; get accumulated status byte
+            ani  20h          ; mask out everything but collision flag
+            lbnz COLLISION    ; test to see if collision occurred during frame
+          
+            ; reset color of target
+            mov  ra, SPRITE_POS0+3
+            ldi  COLOR_DARK_RED
             str  ra            ; set color
-            lbr  DONE_5FLAG
+            lbr  DONE_COLLISION
             
-            ; change color of 4th ball when 5 sprite flag set
-FLAG5:      mov  ra, SPRITE_POS3+3
-            ldi  COLOR_MAGENTA ; magenta
-            str  ra            ; set color
-
-DONE_5FLAG: ; user input for exit
-            b4  QUIT          ; exit if input typed
-
-            ; redraw but skip every other move - effective 30Hz display
-            ; must redraw else successive inp/waits will hang
-            glo  rc
-            ani  1
-            lbz  UPDATE_POS
-
+            ; change color of target to black at collision
+COLLISION:  mov  ra, SPRITE_POS0+3
+            ldi  COLOR_BLACK
+            str  ra            ; set color                        
+            
+DONE_COLLISION: ; user input for exit            
+            b4  QUIT             ; wait for input to exit             
+            
 MOVE_SPRITES:
-            ; update Y pos of fifth sprite
-            mov  ra, SPRITE_POS4
+            ; update X pos of projectile
+            mov  ra, SPRITE_POS1+1
             ldn  rb
             lbz  SET_POSITION_PTR
             str  ra
@@ -138,14 +135,12 @@ MOVE_SPRITES:
 UPDATE_POS: call SPRITE_DAT
             dw   SPRITE_POS0
             inc  rc
-            req                   ; clear 5th sprite flag after move
             lbr  NEXT_FRAME
 
-QUIT:       CALL RESET_VDP        ; reset video to turn of vdp interrupt
-            CALL RESET_GROUP      ; set group back to default
-            req                   ; make sure Q is off
+QUIT:       CALL RESET_VDP      ; reset video to turn of vdp interrupt
+            CALL RESET_GROUP    ; set group back to default
             rtn
-
+            
 ; -------------------------------------------------------------------
 ;            Reset Video and turn off VDP interrupts
 ; -------------------------------------------------------------------
@@ -156,7 +151,7 @@ RESET_VDP:    sex     r3            ; x = p for VDP out
               db      081h
               sex     r2            ; set x back to stack pointer
               rtn                 
-
+            
 ; -------------------------------------------------------------------
 ;            Set the Expansion Group for Video Card
 ; -------------------------------------------------------------------
@@ -166,20 +161,20 @@ SET_GROUP:
             str  r2
             out  EXP_PORT    ; Set group on expansion card
             dec  r2
-#endif            
+#endif
             rtn 
 
 ; -------------------------------------------------------------------
 ;            Set the Expansion Group back to default
 ; -------------------------------------------------------------------
-RESET_GROUP:
-#ifdef EXP_PORT          
-            ldi  DEF_GROUP    ; All other cards are in group 0
-            str  r2
-            out  EXP_PORT     ; Set group on expansion card
-            dec  r2
+RESET_GROUP:  
+#ifdef EXP_PORT
+              ldi  DEF_GROUP   ; All other cards are in group 0
+              str  r2
+              out  EXP_PORT    ; Set group on expansion card
+              dec  r2
 #endif
-            rtn
+              rtn
                                        
 
 ; -------------------------------------------------------------------
@@ -201,7 +196,7 @@ NEXTREG:    lda  rf
             smi  88h
             lbnz NEXTREG
             rtn
-
+            
 ; -----------------------------------------------------------
 ;         Select VDP destination address for sending
 ; -----------------------------------------------------------
@@ -252,7 +247,7 @@ SEND_VDP_COLORS:
 
             ; now copy data
             mov  r7, 1800h     ; 6144 bytes
-            ldi  COLOR_GRAY    ; gray field
+            ldi  COLOR_GRAY    ; background
             str  r2
 NEXT_CLR:   out  VDP_DAT_P     ; VDP will autoincrement VRAM address
             dec  r2
@@ -262,7 +257,7 @@ NEXT_CLR:   out  VDP_DAT_P     ; VDP will autoincrement VRAM address
             ghi  r7
             lbnz NEXT_CLR
             rtn
-
+        
 ; -----------------------------------------------------------
 ; Set name table entries of vram @ 3800h (Name table)
 ; -----------------------------------------------------------
@@ -304,7 +299,7 @@ NEXT_BYTE:  lda  rf
             glo  r7
             lbnz NEXT_BYTE
             rtn
-            
+
 ; -------------------------------------------------------------------
 ;      Get sprite attributes data and send to VDP
 ; -------------------------------------------------------------------
@@ -326,8 +321,9 @@ NEXT_ATR:   lda  rf
             glo  r7
             lbnz NEXT_ATR
             rtn
-    
-        
+
+
+
             ; default VDP register settings for graphics II mode
 VREG_SET:   db  2       ; VR0 graphics 2 mode, no ext video
             db  0C2h    ; VR1 16k vram, display enabled, intr disabled; 16x16 sprites
@@ -337,72 +333,45 @@ VREG_SET:   db  2       ; VR0 graphics 2 mode, no ext video
             db  3       ; VR4 Pattern table address 0000h
             db  76h     ; VR5 Sprite attribute table address 3B00h
             db  3       ; VR6 Sprite pattern table address 1800h
-            db  0ch     ; Backdrop color dark green
+            db  COLOR_GRAY     ; Backdrop color
 
 SPRITE_PAT:
-            ; 16x16 ball 1
-            db  007h,01Fh,03Fh,07Fh,07Fh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,07Fh,07Fh,03Fh,01Fh,007h
-            db  0E0h,0F8h,0FCh,0FEh,0FEh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,0FEh,0FEh,0FCh,0F8h,0E0h
+            ; 16x16 target
+            db  007h, 01Fh, 03Fh, 07Fh, 07Fh, 0FFh, 0FFh, 0FFh
+            db  0FFh, 0FFh, 0FFh, 07Fh, 07Fh, 03Fh, 01Fh, 007h
+            db  0E0h, 0F8h, 0FCh, 0FEh, 0FEh, 0FFh, 0FFh, 0FFh
+            db  0FFh, 0FFh, 0FFh, 0FEh, 0FEh, 0FCh, 0F8h, 0E0h
 
-            ; 16x16 ball 2
-            db  007h,01Fh,03Fh,07Fh,07Fh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,07Fh,07Fh,03Fh,01Fh,007h
-            db  0E0h,0F8h,0FCh,0FEh,0FEh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,0FEh,0FEh,0FCh,0F8h,0E0h
-
-            ; 16x16 ball 3
-            db  007h,01Fh,03Fh,07Fh,07Fh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,07Fh,07Fh,03Fh,01Fh,007h
-            db  0E0h,0F8h,0FCh,0FEh,0FEh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,0FEh,0FEh,0FCh,0F8h,0E0h
-
-            ; 16x16 ball 4
-            db  007h,01Fh,03Fh,07Fh,07Fh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,07Fh,07Fh,03Fh,01Fh,007h
-            db  0E0h,0F8h,0FCh,0FEh,0FEh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,0FEh,0FEh,0FCh,0F8h,0E0h
-
-            ; 16x16 ball 5
-            db  007h,01Fh,03Fh,07Fh,07Fh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,07Fh,07Fh,03Fh,01Fh,007h
-            db  0E0h,0F8h,0FCh,0FEh,0FEh,0FFh,0FFh,0FFh
-            db  0FFh,0FFh,0FFh,0FEh,0FEh,0FCh,0F8h,0E0h
+            ; 16x16 projectile
+            db  000h, 000h, 000h, 000h, 000h, 000h, 000h, 001h
+            db  001h, 000h, 000h, 000h, 000h, 000h, 000h, 000h
+            db  000h, 000h, 000h, 000h, 000h, 000h, 000h, 080h
+            db  080h, 000h, 000h, 000h, 000h, 000h, 000h, 000h
 END_SPRITE_PAT:
 
 ; Note: backup copy not really used in this version except at initialization
-; Since each 16x16 sprite takes up 4 8x8 'slots' they are numbered 0,4,8,12,16
+; Since each 16x16 sprite takes up 4 8x8 'slots' they are numbered 0&4
 SPRITE_ATTR:
             ;   [Y,   X, Id#, Color]
-             db  88,  80, 0,  COLOR_RED    ; red ball1
-             db  88, 100, 4,  COLOR_GREEN  ; green ball2
-             db  88, 120, 8,  COLOR_BLUE   ; blue ball3
-             db  88, 140, 12, COLOR_WHITE  ; white ball4
-             db  56, 160, 16, COLOR_CYAN   ; cyan ball5
+             db  88, 120, 0,  COLOR_DARK_RED  ; target
+             db  88,  57, 4,  COLOR_DARK_RED  ; projectile
              db  0D0h              ; Sprite processing terminator
 END_SPRITE_ATTR:
 
 ; dynamic position will be updated in this memory block
 START_SPRITE_DATA:
 ;                Y    X
-SPRITE_POS0: db  88,  80, 0,  COLOR_RED    ; red ball1
-SPRITE_POS1: db  88, 100, 4,  COLOR_GREEN  ; green ball2
-SPRITE_POS2: db  88, 120, 8,  COLOR_BLUE   ; blue ball3
-SPRITE_POS3: db  88, 140, 12, COLOR_WHITE  ; white ball4
-SPRITE_POS4: db  56, 160, 16, COLOR_CYAN   ; cyan ball5
+SPRITE_POS0: db  88, 120, 0,  COLOR_DARK_RED  ; target
+SPRITE_POS1: db  88,  57, 4,  COLOR_DARK_RED  ; projectile
 TERMINATOR:  db  0D0h
 END_SPRITE_DATA:
 
-FIFTH_SPRITE_YPOS:
+
+PROJECTILE_SPRITE_XPOS:
             db    57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,
             db    73,  74,  75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,
             db    89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99, 100, 101, 102, 103, 104,
             db   105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
-            db   120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105,
-            db   104, 103, 102, 101, 100,  99,  98,  97,  96,  95,  94,  93,  92,  91,  90,  89,
-            db    88,  87,  86,  85,  84,  83,  82,  81,  80,  79,  78,  77,  76,  75,  74,  73,
-            db    72,  71,  70,  69,  68,  67,  66,  65,  64,  63,  62,  61,  60,  59,  58,  57,
-            db     0,   0
+            db   121, 122, 123, 124, 125, 126, 127, 127, 127, 0,   0
 
-END:
+END: 

@@ -63,7 +63,7 @@ start:    org     2000h
                                                   
           ; Build information                          
             db      5+80h              ; month
-            db      30                 ; day
+            db      31                 ; day
             dw      2022               ; year
             dw      2                  ; build
                         
@@ -92,20 +92,24 @@ main:           ; init sprite position data
 ;                   Command loop
 ; -----------------------------------------------------------
             mov  rc, 0         ; init frame counter
-            req                ; make sure Q is off         
+                     
 SET_POSITION_PTR:
             mov  rb, FIFTH_SPRITE_YPOS
 
-NEXT_FRAME: inp  VDP_REG_P     ; read VDP status, D holds status byte
-            plo  r7            ; save status byte for frame test
-            ani  040h          ; check fifth sprite bit
-            bz   CHK_FRAME
-            seq                ; set 5th sprite flag (Q)
-CHK_FRAME:  glo  r7            ; get status byte and test 
-            shl                ; check msb to see if painting finished
-            bnf  NEXT_FRAME    ; wait for screen to be painted
-            
-            lbq FLAG5          ; if 5th sprite flag set, change color of 4th ball
+NEXT_FRAME: ldi  0            ; clear accumulated status 
+            plo  r7           ; save for frame updates
+
+CHK_FRAME:  inp  VDP_REG_P     ; read VDP status, D holds status byte
+            glo  r7            ; get accumulated status
+            or                 ; accumulate bits that turn true during painting
+            plo  r7            ; save for next check
+
+            shl               ; check msb to see if painting finished
+            bnf  CHK_FRAME    ; wait for screen to be painted            
+
+            glo  r7            ; get accumulated status byte
+            ani  040h          ; mask out everything but fifth sprite bit
+            lbnz FLAG5         ; test to see if fifth sprite occurred
             
             ; reset color of 4th ball back to white
             mov  ra, SPRITE_POS3+3
@@ -138,12 +142,10 @@ MOVE_SPRITES:
 UPDATE_POS: call SPRITE_DAT
             dw   SPRITE_POS0
             inc  rc
-            req                   ; clear 5th sprite flag after move
             lbr  NEXT_FRAME
 
 QUIT:       CALL RESET_VDP        ; reset video to turn of vdp interrupt
             CALL RESET_GROUP      ; set group back to default
-            req                   ; make sure Q is off
             rtn
 
 ; -------------------------------------------------------------------
