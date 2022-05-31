@@ -41,9 +41,17 @@ This program simply displays a black screen.
 ## collision
 This program shows how the collision detection works for two sprites. Press Input to end.
 
+## collision_noq
+Same collision detection program as above, except this version does not change the Q bit
+during the demo. Press Input to end.
+
 ## fivesprites
 This program shows five sprites, the fifth sprite moving up and down behind the band of
 the other 4. The fourth sprite changes color when the fifth passes by. Press Input to end the demo.
+
+## fivesprites_noq
+Same five sprites demo program as above, except this version does not change the Q bit during 
+the demo. Press Input to end.
 
 ## lena
 This program displays a bitmap of the model Lena Forsen.
@@ -79,7 +87,9 @@ Repository Contents
   * asm.bat - Windows batch file to assemble source file with Asm/02 to create binary file. Use the command *asm xxx.asm* to assemble the xxx.asm file.
   * blank.asm - Demo to blank the display.
   * collision.asm - Demo to show sprite collision detection.
+  * collision_noq.asm - Collision demo without using the Q bit.
   * fivesprites.asm - Demo with five sprites, the last one moving up and down.
+  * fivesprites_noq.asm - Five sprites demo without using the Q bit.
   * lena.asm - Demo to display a test bitmap.
   * mackaw.asm - Demo to display a test bitmap.
   * mandrill.asm - Demo to display a test bitmap.
