@@ -45,6 +45,11 @@ This program shows how the collision detection works for two sprites. Press Inpu
 Same collision detection program as above, except this version does not change the Q bit
 during the demo. Press Input to end.
 
+## demo 
+Template program to make your own demo program using Convert9918 and utility program
+to convert TI99A raw binary files into 1802 Assembly code data statements.  Details
+are in the Make Your Own tutorial [available here](docs/MAKEYOUROWN.md).
+  
 ## fivesprites
 This program shows five sprites, the fifth sprite moving up and down behind the band of
 the other 4. The fourth sprite changes color when the fifth passes by. Press Input to end the demo.
@@ -79,7 +84,12 @@ Show different text and background color combinations. Press 0 to 9 to change co
 
 Library Files
 -------------
-The demo files are grouped into an Elf/OS library file *tms9118.lbr* that can be unpacked with the Elf/OS lbr command using the e option to *extract* files. Extract these demo files with the Elf/OS command *lbr e tms9118* 
+The demo files are grouped into an Elf/OS library file *tms9118.lbr* that can be unpacked with the Elf/OS lbr command using the e option to *extract* files. Extract these demo files with the Elf/OS command *lbr e tms9118*
+
+[Make Your Own Demo](docs/MAKEYOUROWN.md)
+------------------
+Using the program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com.  This utility converts a JPeg image file into two
+raw binary data files which can then be converted into data statements in an 1802 include file which can then be assembled into a program to display the image under the Elf/OS.  A [step by step tutorial](docs/MAKEYOUROWN.md) is available that details how to create your own image demo. 
 
 Repository Contents
 -------------------
@@ -88,6 +98,7 @@ Repository Contents
   * blank.asm - Demo to blank the display.
   * collision.asm - Demo to show sprite collision detection.
   * collision_noq.asm - Collision demo without using the Q bit.
+  * demo.asm - Template to make your own demo program.
   * fivesprites.asm - Demo with five sprites, the last one moving up and down.
   * fivesprites_noq.asm - Five sprites demo without using the Q bit.
   * lena.asm - Demo to display a test bitmap.
@@ -101,10 +112,16 @@ Repository Contents
 * **/src/include/**  -- Source files for Elf/OS file utilities.
   * ops.inc - Opcode definitions for Asm/02.
   * bios.inc - Bios definitions from Elf/OS
-  * vdp.inc - Video card configuration constants
+  * vdp.inc - Video card configuration constants  
 * **/bin/**  -- Binary files for TMS9118 demo programs.
+* **/docs/** -- Documentation files.
+   * MAKEYOUROWN.md - Tutorial to make your own image demo using [Convert9918](https://github.com/tursilion/convert9918). 
 * **/lbr/**  -- Library file for TMS9118 demos. (Unpack with Elf/OS lbr command)
   * tms9118.lbr - Library file for TMS9118 demos.
+* **/pics/** -- Picture files used in the readme and demo tutorial.
+* **/utils/** -- Utility program used in the Make Your Own demo. 
+  * bin2asmm1802.exe - Executable utility program to convert TI99A raw binary files into an 1802 Assembly include file.  
+  * bin2asm1802.c - Source file for executable utility program.
 
 License Information
   -------------------
