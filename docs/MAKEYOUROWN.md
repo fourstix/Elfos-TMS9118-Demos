@@ -8,30 +8,30 @@ Making an image program using your own image involves three major steps.
 ## Pre-Requisites
 The Convert9918 is a Windows program, so these instructions will install the pre-requisites under Windows. 
 - Download the zip file for [Convert9918 from github](https://github.com/tursilion/convert9918/blob/main/dist/Convert9918.zip) or from the [Harmlesslion.com website](http://harmlesslion.com/zips/Convert9918.zip).  Unzip the files and install the *Convert9918.exe* under Windows in a directory.  
+- Download the [bin2asm1802.exe](https://github.com/fourstix/Elfos-TMS9118-Demos/blob/main/utils/bin2asm1802.exe) utility program into the working directory.
 - Download the latest release [Windows version of the Asm/02 assembler](https://github.com/fourstix/Asm-02/releases) and install the *Asm02.exe* file under Windows in an Asm02 diretory.
-- In an assembly source directory, download the asm.bat file and bin2asm1802.exe file.  Edit the asm.bat file to replace [Your_PATH] with the correct path to the Asm02 directory.
+- In an assembly source directory, download the asm.bat file and bin2asm1802.exe file.  Edit the asm.bat file to replace [Your_PATH] with the correct path to the Asm02 directory on your computer.
 - Underneath the assembly source directory, create an include directory with the files *vdp.inc*, *bios.inc* and *ops.inc*.  These are the common include files for definitions for all programs in this repository.
 - Decide on a demo image.  An image with 4x3 aspect ratio with a central feature contrasting with a simple background seems to work best with the TI9118 graphics mode 2. A sample [demo image](pics/demo.jpg) of the [Cape Hatteras lighthouse](https://en.wikipedia.org/wiki/Cape_Hatteras_Lighthouse) is used in this example.
 
 ## Convert the JPG image to raw binary Files
-- Start the Convert9918 program, press Open and select your image.
+- Start the Convert9918 program, press Open and select your image.  
 - The image will load and then a dithered version will appear.
-<image goes here> 
-- Press Save, and the dialog change the type to "Raw Files".  Note saving the image into any other type of file will not work.  The *bin2asm1802* program requires raw binary files without any headers.
-<image goes here>
+  <table>
+  <tr><td>
+  <img src="https://github.com/fourstix/Elfos-TMS9118-Demos/blob/main/pics/Convert_1.jpg">
+  </td></tr>
+  <tr><td>Convert9918 Image Conversion</td></td></tr>
+  </table>
+- Press Save, and the dialog change the type to "Raw Files".  Note saving the image into any other type of   file will not work.  The *bin2asm1802* program requires raw binary files without any headers.
 - Enter a file name, such as *demo*. Do not enter an extension.
+  <table>
+  <tr><td>
+  <img src="https://github.com/fourstix/Elfos-TMS9118-Demos/blob/main/pics/Convert_2.jpg">
+  </td></tr>
+  <tr><td>Convert9918 Save File Dialog</td></td></tr>
+  </table>
 - Convert9918 will create two files: a bitmap pattern file named **DEMO.TIAP** and a colortable file named **DEMO.TIAC**.
-<table>
-<tr><td>
-<img width=300 src="https://github.com/fourstix/Elfos-TMS91118-Demos/blob/main/pics/Convert_1.jpg">
-</td></tr>
-<tr><td>Convert9918 Image Conversion</td></td></tr>
-<tr><td>
-<img width=300 src="https://github.com/fourstix/Elfos-TMS91118-Demos/blob/main/pics/Convert_2.jpg">
-</td></tr>
-<tr><td>Convert9918 Save File Dialog</td></td></tr>
-
-</table>
 
 # Convert the raw binary files to an 1802 Assembly include file.
 - Copy the two files **DEMO.TIAP** and **DEMO.TIAC** into the same directory as the **bin2asm1802** program.
@@ -51,7 +51,6 @@ There are several good references on image conversion available on the harmlessl
 - [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) - Convert modern graphics into TMS9918A compatible bitmaps.
 - [Modern Graphics on the 9918](https://harmlesslion.com/text/Modern%20Graphics%20on%20the%209918.pdf) by Mike Brent aka Tursi.
 - [Harmlesslion.com Conversion Software](http://harmlesslion.com/software/convert)
-
 
 License Information
 -------------------
