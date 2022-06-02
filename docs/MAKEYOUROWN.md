@@ -1,18 +1,19 @@
 # Make Your Own Demo
 
-Making an image program using your own image involves three major steps.
+Making an image program using your own image involves four major steps.
+- Set up the pre-requisites for [Asm/02 assembler](https://github.com/rileym65/Asm-02) and install [Convert9118 Conversion program.](http://harmlesslion.com/cgi-bin/onesoft.cgi?2).
 - Converting the image to raw binary files using [Convert9918](https://github.com/tursilion/convert9918).
 - Converting raw binary files to an 1802 Assembly include file.
 - Assemble the demo program using [Asm/02](https://github.com/fourstix/Asm-02/releases).
 
-## Pre-Requisites
-The Convert9918 is a Windows program, so these instructions will install the pre-requisites under Windows. 
-- Download the zip file for [Convert9918 from github](https://github.com/tursilion/convert9918/blob/main/dist/Convert9918.zip) or from the [Harmlesslion.com website](http://harmlesslion.com/zips/Convert9918.zip).  Unzip the files and install the *Convert9918.exe* under Windows in a directory.  
+## Set up Pre-Requisites
+The Convert9918 is a Windows program, so these instructions will set up the pre-requisites under Windows. 
+- Download the zip file for [Convert9918 from github](https://github.com/tursilion/convert9918/blob/main/dist/Convert9918.zip) or from the [Harmlesslion.com website](http://harmlesslion.com/zips/Convert9918.zip).  Unzip the files and install the *Convert9918.exe* program under Windows in a working directory.  
 - Download the [bin2asm1802.exe](https://github.com/fourstix/Elfos-TMS9118-Demos/blob/main/utils/bin2asm1802.exe) utility program into the working directory.
-- Download the latest release [Windows version of the Asm/02 assembler](https://github.com/fourstix/Asm-02/releases) and install the *Asm02.exe* file under Windows in an Asm02 diretory.
-- In an assembly source directory, download the asm.bat file and bin2asm1802.exe file.  Edit the asm.bat file to replace [Your_PATH] with the correct path to the Asm02 directory on your computer.
+- Download the latest release [Windows version of the Asm/02 assembler](https://github.com/fourstix/Asm-02/releases) and install the *Asm02.exe* file under Windows in an Asm02 program directory.
+- In an assembly source directory, download the asm.bat file and bin2asm1802.exe file.  Edit the asm.bat file to replace the text *[Your_PATH]* with the correct path to the Asm02 program directory on your computer.
 - Underneath the assembly source directory, create an include directory with the files *vdp.inc*, *bios.inc* and *ops.inc*.  These are the common include files for definitions for all programs in this repository.
-- Decide on a demo image.  An image with 4x3 aspect ratio with a central feature contrasting with a simple background seems to work best with the TI9118 graphics mode 2. A sample [demo image](pics/demo.jpg) of the [Cape Hatteras lighthouse](https://en.wikipedia.org/wiki/Cape_Hatteras_Lighthouse) is used in this example.
+- Decide on a demo image.  An image with 4x3 aspect ratio with a central feature contrasting with a simple background seems to work best with the TI9118 graphics mode 2. A sample [demo image](https://github.com/fourstix/Elfos-TMS9118-Demos/blob/main/pics/demo.jpg) of the [Cape Hatteras lighthouse](https://en.wikipedia.org/wiki/Cape_Hatteras_Lighthouse) is used in this example.
 
 ## Convert the JPG image to raw binary Files
 - Start the Convert9918 program, press Open and select your image.  
@@ -40,7 +41,6 @@ The Convert9918 is a Windows program, so these instructions will install the pre
 
 # Assemble the image data into the demo program.  
 - Copy the 1802 Assembly file **DEMO.inc** into the same directory as *demo.asm* and *asm.bat*.
-- Make sure the include directory */include/* with the  is 
 - Run the command *asm demo.asm* to assemble the demo program with the image data in the **DEMO.inc** file.
 - If desired, rename the assembled program to something more meaningful, like *hatteras*.
 - Download the program to the 1802-Mini and run it.
@@ -70,7 +70,7 @@ License Information
   The Convert9918 program was written by Mike Brent (Tursi @ Harmlesslion.com).
   
   Convert9918 
-  Copyright (c) 2017-2022 by Mike Brent (Tursi @ Harmlesslion.com)
+  Copyright (c) 2017-2022 by Mike Brent
   
   TMS9118 Demo source and binaries
   Copyright (c) 2021 by Glenn Jolly
