@@ -12,7 +12,8 @@ The Convert9918 is a Windows program, so these instructions will set up the pre-
 - Download the [bin2asm1802.exe](https://github.com/fourstix/Elfos-TMS9118-Demos/blob/main/utils/bin2asm1802.exe) utility program into the working directory.
 - Download the latest release [Windows version of the Asm/02 assembler](https://github.com/fourstix/Asm-02/releases) and install the *Asm02.exe* file under Windows in an Asm02 program directory.
 - In an assembly source directory, download the asm.bat file and bin2asm1802.exe file.  Edit the asm.bat file to replace the text *[Your_PATH]* with the correct path to the Asm02 program directory on your computer.
-- Underneath the assembly source directory, create an include directory with the files *vdp.inc*, *bios.inc* and *ops.inc*.  These are the common include files for definitions for all programs in this repository.
+- Download the [demo.asm](https://github.com/fourstix/Elfos-TMS9118-Demos/blob/main/src/demo.asm) source file and place it in the assembly source directory with *asm.bat*.
+- Underneath the assembly source directory, create an [include directory](https://github.com/fourstix/Elfos-TMS9118-Demos/tree/main/src/include) with the files *vdp.inc*, *bios.inc* and *ops.inc*.  These are the common include files for definitions for all programs in this repository.
 - Decide on a demo image.  An image with 4x3 aspect ratio with a central feature contrasting with a simple background seems to work best with the TI9118 graphics mode 2. A sample [demo image](https://github.com/fourstix/Elfos-TMS9118-Demos/blob/main/pics/demo.jpg) of the [Cape Hatteras lighthouse](https://en.wikipedia.org/wiki/Cape_Hatteras_Lighthouse) is used in this example.
 
 ## Convert the JPG image to raw binary Files
@@ -69,7 +70,7 @@ License Information
   
   The Convert9918 program was written by Mike Brent (Tursi @ Harmlesslion.com).
   
-  Convert9918 
+  Convert9918 Image Conversion Program
   Copyright (c) 2017-2022 by Mike Brent
   
   TMS9118 Demo source and binaries
