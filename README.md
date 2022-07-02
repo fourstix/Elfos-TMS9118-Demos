@@ -92,13 +92,11 @@ The demo files are grouped into an Elf/OS library file *tms9118.lbr* that can be
 
 [Make Your Own Demo](docs/MAKEYOUROWN.md)
 ------------------
-Using the program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com.  This utility converts a JPeg image file into two
-raw binary data files which can then be converted into data statements in an 1802 include file which can then be assembled into a program to display the image under the Elf/OS.  A [step by step tutorial](docs/MAKEYOUROWN.md) is available that details how to create your own image demo. 
+The program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com converts a jpeg image file into two raw binary data files that can then be converted into data statements in an 1802 include file which can then be assembled into a program to display the image under the Elf/OS.  A [step by step tutorial](docs/MAKEYOUROWN.md) is available that details how to create your own image demo. 
 
 [Create a Sun Raster Image file](docs/CREATEIMAGE.md)
 ------------------
-Using the program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com.  This utility converts a JPeg image file into two
-raw binary data files which can then be converted into a Sun Raster image file that can be displayed using the *view* utility under the Elf/OS.  A [step by step tutorial](docs/CREATEIMAGE.md) is available that details how to create your own image demo. 
+The program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com converts a jpeg image file into two raw binary data files that can then be converted into a Sun Raster image file that can be displayed using the *view* utility under the Elf/OS.  A [step by step tutorial](docs/CREATEIMAGE.md) is available that details how to create your own image demo. 
 
 Repository Contents
 -------------------
@@ -128,7 +126,10 @@ Repository Contents
    * MAKEYOUROWN.md - Tutorial to make your own image demo using [Convert9918](https://github.com/tursilion/convert9918). 
 * **/lbr/**  -- Library file for TMS9118 demos. (Unpack with Elf/OS lbr command)
   * tms9118.lbr - Library file for TMS9118 demos.
-* **/pics/** -- Picture files used in the readme and demo tutorial.
+* **/pics/** -- Picture files used in the readme and demo tutorial, including sample demo image files.
+  * demo.jpg - Sample jpeg image used in the tutorials.
+  * demo.ras - Sample uncompressed Sun Raster image file.
+  * demo.rle - Sample RLE compressed Sun Raster image file.
 * **/utils/** -- Utility program used in the Make Your Own demo. 
   * bin2asmm1802.exe - Executable utility program to convert TI99A raw binary files into an 1802 Assembly include file.  
   * bin2asm1802.c - Source file for executable bin2asm1802 utility program.

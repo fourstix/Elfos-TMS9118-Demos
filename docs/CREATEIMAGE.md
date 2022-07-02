@@ -35,8 +35,8 @@ The Convert9918 is a Windows program, so these instructions will set up the pre-
 - Copy the two files **DEMO.TIAP** and **DEMO.TIAC** into the same directory as the **bin2sun** program.
 - The command syntax is *bin2sun [-c]* **filename** where filename is the file name for the TIAP and TIAC files.
 - Run command *bin2sun DEMO* to run the bin2sun with the parameter **DEMO**.
-- The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and colortable data in the uncompressed format.
-- To create a compreessed Sun Raster image file, run the bin2sun command with the '-c' option.
+- The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and color table data in the uncompressed format.
+- To create a compressed Sun Raster image file, run the bin2sun command with the '-c' option.
 - Run the command *bin2sun -c DEMO* to run the bin2sun with the option -c and the file name **DEMO**.
 - The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and color table data in the Sun RLE compressed format.  This is often smaller than the uncompressed data size.
 
