@@ -82,14 +82,21 @@ Displays a color version of the classic Cosmac spaceship by Joseph A Weisbecker.
 ## textColors
 Show different text and background color combinations. Press 0 to 9 to change colors and 'x' to exit.
 
+## view
+**Usage:** view *filename*
+View a Sun Raster image file *filename*.  Supports uncompressed and Sun RLE compressed image files.
+
 Library Files
 -------------
 The demo files are grouped into an Elf/OS library file *tms9118.lbr* that can be unpacked with the Elf/OS lbr command using the e option to *extract* files. Extract these demo files with the Elf/OS command *lbr e tms9118*
 
 [Make Your Own Demo](docs/MAKEYOUROWN.md)
 ------------------
-Using the program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com.  This utility converts a JPeg image file into two
-raw binary data files which can then be converted into data statements in an 1802 include file which can then be assembled into a program to display the image under the Elf/OS.  A [step by step tutorial](docs/MAKEYOUROWN.md) is available that details how to create your own image demo. 
+The program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com converts a jpeg image file into two raw binary data files that can then be converted into data statements in an 1802 include file which can then be assembled into a program to display the image under the Elf/OS.  A [step by step tutorial](docs/MAKEYOUROWN.md) is available that details how to create your own image demo. 
+
+[Create a Sun Raster Image file](docs/CREATEIMAGE.md)
+------------------
+The program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com converts a jpeg image file into two raw binary data files that can then be converted into a Sun Raster image file that can be displayed using the *view* utility under the Elf/OS.  A [step by step tutorial](docs/CREATEIMAGE.md) is available that details how to create your own image demo. 
 
 Repository Contents
 -------------------
@@ -109,6 +116,7 @@ Repository Contents
   * showPalette - Demo showing vertical color bars.
   * spaceship2 - Demo to display color version of the Cosmac spaceship bitmap.
   * textColors - Demo to display various text and background colors.
+  * view - Program to display Sun Raster image files.
 * **/src/include/**  -- Source files for Elf/OS file utilities.
   * ops.inc - Opcode definitions for Asm/02.
   * bios.inc - Bios definitions from Elf/OS
@@ -118,10 +126,15 @@ Repository Contents
    * MAKEYOUROWN.md - Tutorial to make your own image demo using [Convert9918](https://github.com/tursilion/convert9918). 
 * **/lbr/**  -- Library file for TMS9118 demos. (Unpack with Elf/OS lbr command)
   * tms9118.lbr - Library file for TMS9118 demos.
-* **/pics/** -- Picture files used in the readme and demo tutorial.
+* **/pics/** -- Picture files used in the readme and demo tutorial, including sample demo image files.
+  * demo.jpg - Sample jpeg image used in the tutorials.
+  * demo.ras - Sample uncompressed Sun Raster image file.
+  * demo.rle - Sample RLE compressed Sun Raster image file.
 * **/utils/** -- Utility program used in the Make Your Own demo. 
   * bin2asmm1802.exe - Executable utility program to convert TI99A raw binary files into an 1802 Assembly include file.  
-  * bin2asm1802.c - Source file for executable utility program.
+  * bin2asm1802.c - Source file for executable bin2asm1802 utility program.
+  * bin2sun.exe - Executable utility program to convert TI99A raw binary files into a Sun Raster Image file.  
+  * bin2sun.c - Source file for executable bin2sun utility program.
 
 License Information
   -------------------
