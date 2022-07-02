@@ -37,8 +37,8 @@ The Convert9918 is a Windows program, so these instructions will set up the pre-
 - Run command *bin2sun DEMO* to run the bin2sun with the parameter **DEMO**.
 - The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and colortable data in the uncompressed format.
 - To create a compreessed Sun Raster image file, run the bin2sun command with the '-c' option.
-- Run the command *bin2sun DEMO* to run the bin2sun with the parameter **DEMO**.
-- The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and colortable data in the Sun RLE compressed format.  This is often much smaller than the uncompressed data size.
+- Run the command *bin2sun -c DEMO* to run the bin2sun with the option -c and the file name **DEMO**.
+- The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and color table data in the Sun RLE compressed format.  This is often smaller than the uncompressed data size.
 
 # Display the image with the view program.  
 - If desired, rename the assembled program to something more meaningful, like *hatteras.ras*.
@@ -63,8 +63,8 @@ The color map data is followed by the bitmap data, either uncompressed or compre
 <tr><td>0020h:</td><td colspan="4"> Color Map Data</td><td>(ccddh bytes)</td></tr>
 <tr><td>ccddh + 0020h:</td><td colspan="4"> Bitmap Data</td><td>(aabbh bytes)</td></tr>
 </table>
-**Notes:**
 
+**Notes:**
 - Header size is 32 bytes, consisting of eight 4 byte big endian integers.
 - Data Type xx is either 01 for uncompressed, or 02 for Sun RLE compressed data. Other data types are not supported.
 - Bitmap length aabbh is 1800h for uncompressed data.
