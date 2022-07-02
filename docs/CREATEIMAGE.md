@@ -65,12 +65,12 @@ The color map data is followed by the bitmap data, either uncompressed or compre
 </table>
 
 **Notes:**
-- Header size is 32 bytes, consisting of eight 4 byte big endian integers.
+- Header size is 32 bytes, consisting of eight 4-byte big-endian integers.
 - Data Type xx is either 01 for uncompressed, or 02 for Sun RLE compressed data. Other data types are not supported.
 - Bitmap length aabbh is 1800h for uncompressed data.
 - Only color map data type 02 for Raw Color Map Data is supported. RGB format is not supported.
 - Color map length ccddh is 1800h for uncompressed data.
-- Total data size is 3020h bytes for an uncompressed image.
+- Total data size is 3020h (or 12,320) bytes for an uncompressed image.
 
 References
 ----------
