@@ -141,7 +141,7 @@ Repository Contents
   * eclipse.ras - Nasa photo of 2017 Solar Eclipse.
   * maui.ras - Vacation photo of a beach in Maui.
   * moose.ras - Vacation photo of a moose in Alaska.
-  * niagra.ras - Vacation photo of Niagara Falls.
+  * niagara.ras - Vacation photo of Niagara Falls.
   * train.ras - Vacation photo of Alaskan Railroad train engine.
 * **/utils/** -- Utility program used in the Make Your Own demo. 
   * bin2asmm1802.exe - Executable utility program to convert TI99A raw binary files into an 1802 Assembly include file.  
