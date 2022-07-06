@@ -85,7 +85,7 @@ Show different text and background color combinations. Press 0 to 9 to change co
 ## view
 **Usage:** view *filename*  
 
-View a Sun Raster image file *filename*.  Supports uncompressed and Sun RLE compressed image files.
+Display a Sun Raster image file *filename*.  Supports uncompressed and Sun RLE compressed image files.
 
 ## slideshow
 **Usage:** slideshow *[-r]* *[path]*

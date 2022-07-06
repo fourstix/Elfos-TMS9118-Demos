@@ -72,6 +72,27 @@ The color map data is followed by the bitmap data, either uncompressed or compre
 - Color map length ccddh is 1800h for uncompressed data.
 - Total data size is 3020h (or 12,320) bytes for an uncompressed image.
 
+Sun Rasterfile RLE Format
+--------------------------
+- If the first byte is not 0x80, the record is one byte long, and contains a pixel value.  Output 1 pixel of that value.
+-  If the first byte is 0x80 and the second byte is zero, the record is two bytes long.  Output 1 pixel with value 0x80.
+-  If the first byte is 0x80, and the second byte is not zero, the record is three bytes long.  The second byte is a count and the third byte is a value.  Output (count+1) pixels of that value.
+
+**Notes:**
+- The count byte can be a maximum of 0xFF or 255, so up to 256 pixel bytes can be encoded at once.
+- It's inefficient to encode a pixel sequence of less than 3 bytes, so double pixel bytes, are not usually encoded.
+- But any sequence of 0x80 pixel bytes must always be encoded, and a single pixel value 0x80 is always encoded. 
+- Most efficient for graphic images with solid color pixel areas, but less efficient for photographic images with dithering.
+
+**Examples**
+<table>
+<tr><th>Sun RLE Sequence</th><th>Decoded Pixel Bytes</th><th>Note</th></tr>
+<tr><td>34 00 72</td><td>34 00 72</td><td>Unencoded byte sequence</td></tr>
+<tr><td>80 02 34</td><td>34 34 34</td><td>3 byte  (count+1) encoded sequence</td></tr>
+<tr><td>80 00</td>80<td>Literal 80 byte</td></tr>
+<tr><td>80 01 80</td>80 80<td>Two 80 bytes must encoded</td></tr>
+</table>
+
 References
 ----------
 There are several good references on image conversion available on the harmlesslion.com website.
