@@ -86,6 +86,10 @@ Show different text and background color combinations. Press 0 to 9 to change co
 **Usage:** view *filename*
 View a Sun Raster image file *filename*.  Supports uncompressed and Sun RLE compressed image files.
 
+## slideshow
+**Usage:** slideshow *[-r]* *[path]*
+Show a Sun Raster image files in a directory specified by path. If *path* is not specified then the current directory is used. Press input to end the slideshow before all images are shown. The *-r* option will cause the slide show to repeat in a loop until input is pressed. 
+
 Library Files
 -------------
 The demo files are grouped into an Elf/OS library file *tms9118.lbr* that can be unpacked with the Elf/OS lbr command using the e option to *extract* files. Extract these demo files with the Elf/OS command *lbr e tms9118*
@@ -96,7 +100,7 @@ The program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Turs
 
 [Create a Sun Raster Image file](docs/CREATEIMAGE.md)
 ------------------
-The program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com converts a jpeg image file into two raw binary data files that can then be converted into a Sun Raster image file that can be displayed using the *view* utility under the Elf/OS.  A [step by step tutorial](docs/CREATEIMAGE.md) is available that details how to create your own image demo. 
+The program [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) by Tursi at Harmlesslion.com converts a jpeg image file into two raw binary data files that can then be converted into a Sun Raster image file that can be displayed using the *view* utility or the *slideshow* program under the Elf/OS.  A [step by step tutorial](docs/CREATEIMAGE.md) is available that details how to create your own image demo. 
 
 Repository Contents
 -------------------
@@ -117,6 +121,7 @@ Repository Contents
   * spaceship2 - Demo to display color version of the Cosmac spaceship bitmap.
   * textColors - Demo to display various text and background colors.
   * view - Program to display Sun Raster image files.
+  * slideshow - Program to display Sun Raster image files in a directory.
 * **/src/include/**  -- Source files for Elf/OS file utilities.
   * ops.inc - Opcode definitions for Asm/02.
   * bios.inc - Bios definitions from Elf/OS
