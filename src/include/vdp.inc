@@ -25,3 +25,8 @@ COLOR_DARK_GREEN:   equ 0ch
 COLOR_MAGENTA:      equ 0dh
 COLOR_GRAY:         equ 0eh
 COLOR_WHITE:        equ 0fh
+
+; Sun Raster file
+BITMAP_OFFSET:     equ 01820h    ; after header and color map (uncompressed only)
+COLORMAP_OFFSET:   equ 00020h    ; after header (always)
+HEADER_SIZE:       equ 32        ; 32 bytes in header
