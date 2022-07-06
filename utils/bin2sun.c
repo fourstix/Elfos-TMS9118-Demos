@@ -10,7 +10,8 @@
 #include <ctype.h>
 
 //Image size is 256x192 bits or 6144 bytes
-#define TI99_SIZE  6144
+#define TI99_SIZE   6144
+#define STD_SIZE   12288
 
 
 
@@ -27,9 +28,10 @@ int   compressed = 0;
 int main(int argc, char* argv[]) {
 	FILE *f_cmap, *f_bmap, *f_output; // file handles			  
 	char f_name[256];  // file name buffer
-	int cmap_size = 0;  // count of data bytes converted
-  int bmap_size = 0;  // count of data bytes converted
-  int name_idx  = 1;	
+	int cmap_size  = 0;  // count of data bytes converted
+  int bmap_size  = 0;  // count of data bytes converted
+  int total_size = 0;
+	int name_idx  = 1;	
 	//if no image name, show usage message
 	if (argc == 3) {
 		//check for rle compression option
@@ -80,7 +82,7 @@ int main(int argc, char* argv[]) {
 	//close bitmap data file
 	fclose(f_cmap);
 	
-	//process colortable data file
+	//process bitmap data file
 	sprintf(f_name, "%s.TIAP", argv[name_idx]);	
 	printf("\nOpening bitmap pattern file: %s\n", f_name);
 	f_bmap = fopen(f_name, "rb");
@@ -107,6 +109,15 @@ int main(int argc, char* argv[]) {
   //show the number of data bytes converted
 	showInfo("Bitmap", bmap_size, compressed);
 	printf("\nCreated Sun Raster image file: %s.ras\n", argv[name_idx]);
+	//Warn if compressed file is larger than uncompressed
+	if (compressed) {
+		//check the size of RLE encoded image data
+		int total_size = bmap_size + cmap_size;
+		
+		if (total_size > STD_SIZE) {
+			printf("\nWarning: The RLE encoded image size of %d bytes is larger than uncompressed image size.\n", total_size);
+		} //if total_size
+	}//if compressed
   printf("Done.\n");
 	return 0;
 } //main
