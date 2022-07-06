@@ -66,7 +66,7 @@ License Information
   
   All libraries used in this code are copyright their respective authors.
   
-  The demo.as code is based on programs written by Glenn Jolly.
+  The demos code is based on programs written by Glenn Jolly.
   
   The Convert9918 program was written by Mike Brent (Tursi @ Harmlesslion.com).
   
@@ -87,6 +87,12 @@ License Information
   
   The bin2asm1802 Utility
   Copyright (c) 2022 by Gaston Williams
+  
+  The bin2sun Utility
+  Copyright (c) 2022 by Gaston Williams
+  
+  Sun Rasterfile Image Specification
+  Copyright (c) 1989 by Sun Microsystems
   
   Many thanks to the original authors for making their designs and code available as open source.
    

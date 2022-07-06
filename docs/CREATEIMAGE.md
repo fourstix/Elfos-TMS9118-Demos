@@ -145,7 +145,7 @@ License Information
   Copyright (c) 2022 by Gaston Williams
   
   Sun Rasterfile Image Specification
-  Copyright (c) 1989 Sun Microsystems
+  Copyright (c) 1989 by Sun Microsystems
   
   Many thanks to the original authors for making their designs and code available as open source.
    
