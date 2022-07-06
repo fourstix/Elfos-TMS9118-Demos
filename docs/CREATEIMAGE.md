@@ -82,7 +82,7 @@ Sun RLE Algorithm
 - The count byte can be a maximum of 0xFF or 255, so up to 256 pixel bytes can be encoded at once.
 - It's inefficient to encode a pixel sequence of less than 3 bytes, so double pixel bytes, are not usually encoded.
 - But any sequence of 0x80 pixel bytes must always be encoded, and a single pixel value 0x80 is always encoded as 0x80 0x00. 
-- Most efficient for graphic cartoon-like images with solid color pixel areas, but less efficient for photographic images with dithering.
+- Most efficient for graphic images with solid color pixel areas, but less efficient for photographic images with dithering.
 
 **Examples**
 <table>
