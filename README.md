@@ -134,9 +134,15 @@ Repository Contents
 * **/lbr/**  -- Library file for TMS9118 demos. (Unpack with Elf/OS lbr command)
   * tms9118.lbr - Library file for TMS9118 demos.
 * **/pics/** -- Picture files used in the readme and demo tutorial, including sample demo image files.
-  * demo.jpg - Sample jpeg image used in the tutorials.
+  * demo.jpg - Sample jpeg image used in the tutorials. (Vacation photo of Cape Hatteras Lighthouse.)
   * demo.ras - Sample uncompressed Sun Raster image file.
   * demo.rle - Sample RLE compressed Sun Raster image file.
+* **/pics/samples/** -- Sample Sun Raster image files for TMS9118 Video Card
+  * eclipse.ras - Nasa photo of 2017 Solar Eclipse.
+  * maui.ras - Vacation photo of a beach in Maui.
+  * moose.ras - Vacation photo of a moose in Alaska.
+  * niagra.ras - Vacation photo of Niagara Falls.
+  * train.ras - Vacation photo of Alaskan Railroad train engine.
 * **/utils/** -- Utility program used in the Make Your Own demo. 
   * bin2asmm1802.exe - Executable utility program to convert TI99A raw binary files into an 1802 Assembly include file.  
   * bin2asm1802.c - Source file for executable bin2asm1802 utility program.
