@@ -173,6 +173,15 @@ License Information
   The Convert9918 Image Conversion Program 
   Copyright (c) 2017-2022 by Mike Brent
   
+  The bin2asm1802 Utility
+  Copyright (c) 2022 by Gaston Williams
+  
+  The bin2sun Utility
+  Copyright (c) 2022 by Gaston Williams
+  
+  Sun Rasterfile Image Specification
+  Copyright (c) 1989 Sun Microsystems
+  
   Many thanks to the original authors for making their designs and code available as open source.
    
   This code, firmware, and software is released under the [MIT License](http://opensource.org/licenses/MIT).
