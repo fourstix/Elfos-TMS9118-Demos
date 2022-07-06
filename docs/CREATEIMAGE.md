@@ -72,8 +72,8 @@ The color map data is followed by the bitmap data, either uncompressed or compre
 - Color map length ccddh is 1800h for uncompressed data.
 - Total data size is 3020h (or 12,320) bytes for an uncompressed image.
 
-Sun Rasterfile RLE Format
---------------------------
+Sun RLE Algorithm
+-----------------
 - If the first byte is not 0x80, the record is one byte long, and contains a pixel value.  Output 1 pixel of that value.
 -  If the first byte is 0x80 and the second byte is zero, the record is two bytes long.  Output 1 pixel with value 0x80.
 -  If the first byte is 0x80, and the second byte is not zero, the record is three bytes long.  The second byte is a count and the third byte is a value.  Output (count+1) pixels of that value.
@@ -88,9 +88,10 @@ Sun Rasterfile RLE Format
 <table>
 <tr><th>Sun RLE Sequence</th><th>Decoded Pixel Bytes</th><th>Note</th></tr>
 <tr><td>34 00 72</td><td>34 00 72</td><td>Unencoded byte sequence</td></tr>
-<tr><td>80 02 34</td><td>34 34 34</td><td>3 byte  (count+1) encoded sequence</td></tr>
-<tr><td>80 00</td>80<td>Literal 80 byte</td></tr>
-<tr><td>80 01 80</td>80 80<td>Two 80 bytes must encoded</td></tr>
+<tr><td>34 34 72</td><td>34 34 72</td><td>Double bytes not usually encoded</td></tr>
+<tr><td>80 02 34</td><td>34 34 34</td><td>3 byte (count+1) encoded sequence</td></tr>
+<tr><td>80 00</td><td>80</td><td>Single 80 byte</td></tr>
+<tr><td>80 01 80</td><td>80 80</td><td>Double 80 bytes must encoded</td></tr>
 </table>
 
 References
