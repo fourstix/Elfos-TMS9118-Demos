@@ -81,8 +81,8 @@ Sun RLE Algorithm
 **Notes:**
 - The count byte can be a maximum of 0xFF or 255, so up to 256 pixel bytes can be encoded at once.
 - It's inefficient to encode a pixel sequence of less than 3 bytes, so double pixel bytes, are not usually encoded.
-- But any sequence of 0x80 pixel bytes must always be encoded, and a single pixel value 0x80 is always encoded. 
-- Most efficient for graphic images with solid color pixel areas, but less efficient for photographic images with dithering.
+- But any sequence of 0x80 pixel bytes must always be encoded, and a single pixel value 0x80 is always encoded as 0x80 0x00. 
+- Most efficient for graphic cartoon-like images with solid color pixel areas, but less efficient for photographic images with dithering.
 
 **Examples**
 <table>
@@ -90,8 +90,10 @@ Sun RLE Algorithm
 <tr><td>34 00 72</td><td>34 00 72</td><td>Unencoded byte sequence</td></tr>
 <tr><td>34 34 72</td><td>34 34 72</td><td>Double bytes not usually encoded</td></tr>
 <tr><td>80 02 34</td><td>34 34 34</td><td>3 byte (count+1) encoded sequence</td></tr>
+<tr><td>80 04 34</td><td>34 34 34 34 34</td><td>5 byte (count+1) encoded sequence</td></tr>
 <tr><td>80 00</td><td>80</td><td>Single 80 byte</td></tr>
 <tr><td>80 01 80</td><td>80 80</td><td>Double 80 bytes must encoded</td></tr>
+<tr><td>80 03 80</td><td>80 80 80 80</td><td>Four 80 bytes (count +1) sequence</td></tr>
 </table>
 
 References
