@@ -4,7 +4,7 @@ files section of the COSMAC ELF Group in the [Glenn Jolly/TMS9118](https://group
 
 Platform  
 --------
-These commands were written to run on an [1802-Mini](https://github.com/dmadole/1802-Mini) with the [1802-Mini TMS9918 Video Card]((https://github.com/dmadole/1802-Mini-9918-Video) created by David Madole.  A lot of information and software for the 1802-Mini can be found in the [COSMAC ELF Group](https://groups.io/g/cosmacelf) at groups.io.
+These commands were written to run on an [1802-Mini](https://github.com/dmadole/1802-Mini) with the [1802-Mini TMS9918 Video Card](https://github.com/dmadole/1802-Mini-9918-Video) created by David Madole.  A lot of information and software for the 1802-Mini can be found in the [COSMAC ELF Group](https://groups.io/g/cosmacelf) at groups.io.
 
 1802-2 Mini Configuration  
 -------------------------
@@ -83,12 +83,14 @@ Displays a color version of the classic Cosmac spaceship by Joseph A Weisbecker.
 Show different text and background color combinations. Press 0 to 9 to change colors and 'x' to exit.
 
 ## view
-**Usage:** view *filename*
+**Usage:** view *filename*  
+
 View a Sun Raster image file *filename*.  Supports uncompressed and Sun RLE compressed image files.
 
 ## slideshow
 **Usage:** slideshow *[-r]* *[path]*
-Show a Sun Raster image files in a directory specified by path. If *path* is not specified then the current directory is used. Press input to end the slideshow before all images are shown. The *-r* option will cause the slide show to repeat in a loop until input is pressed. 
+
+Show the Sun Raster image files in a directory specified by *path*. If *path* is not specified then the current directory is used. Press input to end the slideshow before all images are shown. The *-r* option will cause the slide show to repeat in a loop until input is pressed. 
 
 Library Files
 -------------
