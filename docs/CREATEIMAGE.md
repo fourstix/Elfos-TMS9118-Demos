@@ -119,7 +119,7 @@ License Information
   
   All libraries used in this code are copyright their respective authors.
   
-  The demo.as code is based on programs written by Glenn Jolly.
+  The demos code is based on programs written by Glenn Jolly.
   
   The Convert9918 program was written by Mike Brent (Tursi @ Harmlesslion.com).
   
