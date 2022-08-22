@@ -1,10 +1,9 @@
 # Create a Sun Raster Image
 
-Making an image program using your own image involves four major steps.
+Making a Sun Raster image using your own image involves four major steps.
 - Set up pre-requisites and install [Convert9118 Conversion program.](http://harmlesslion.com/cgi-bin/onesoft.cgi?2).
-- Converting the image to raw binary files using [Convert9918](https://github.com/tursilion/convert9918).
-- Converting raw binary files to a Sun Raster Image file.
-- Assemble the demo program using [Asm/02](https://github.com/fourstix/Asm-02/releases).
+- Convert the image to raw binary files using [Convert9918](https://github.com/tursilion/convert9918).
+- Convert the raw binary files to a Sun Raster Image file using bin2sun utility program.
 
 ## Setup Pre-requisites and Install the Convert9918 Conversion program
 The Convert9918 is a Windows program, so these instructions will set up the pre-requisites under Windows. 
@@ -21,7 +20,7 @@ The Convert9918 is a Windows program, so these instructions will set up the pre-
   </td></tr>
   <tr><td>Convert9918 Image Conversion</td></td></tr>
   </table>
-- Press Save, and the dialog change the type to "Raw Files".  Note saving the image into any other type of   file will not work.  The *bin2asm1802* program requires raw binary files without any headers.
+- Press Save, and the dialog change the type to "Raw Files".  Note saving the image into any other type of file will not work.  The *bin2asm1802* program requires raw binary files without any headers.
 - Enter a file name, such as *demo*. Do not enter an extension.
   <table>
   <tr><td>
@@ -41,8 +40,8 @@ The Convert9918 is a Windows program, so these instructions will set up the pre-
 - The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and color table data in the Sun RLE compressed format.  This is often smaller than the uncompressed data size.
 
 # Display the image with the view program.  
-- If desired, rename the assembled program to something more meaningful, like *hatteras.ras*.
-- Download the program to the 1802-Mini and run the view program to display it.
+- If desired, rename the image file to something more meaningful, like *hatteras.ras*.
+- Download the image file to the 1802-Mini and run the view program to display it.
 - Run the Elf/OS program *view hatteras.ras* to display the demo image data in the **hatteras.ras** file.
 
 Sun Raster Image Format
