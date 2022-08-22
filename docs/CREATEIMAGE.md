@@ -1,6 +1,6 @@
 # Create a Sun Raster Image
 
-Making a Sun Raster image using your own image involves four major steps.
+Making a Sun Raster image using your own image involves three major steps.
 - Set up pre-requisites and install [Convert9118 Conversion program.](http://harmlesslion.com/cgi-bin/onesoft.cgi?2).
 - Convert the image to raw binary files using [Convert9918](https://github.com/tursilion/convert9918).
 - Convert the raw binary files to a Sun Raster Image file using bin2sun utility program.
@@ -33,10 +33,10 @@ The Convert9918 is a Windows program, so these instructions will set up the pre-
 # Convert the raw binary files to a Sun Raster Image file.
 - Copy the two files **DEMO.TIAP** and **DEMO.TIAC** into the same directory as the **bin2sun** program.
 - The command syntax is *bin2sun [-c]* **filename** where filename is the file name for the TIAP and TIAC files.
-- Run command *bin2sun DEMO* to run the bin2sun with the parameter **DEMO**.
+- Run command *bin2sun DEMO* to run the bin2sun program with the parameter **DEMO**.
 - The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and color table data in the uncompressed format.
-- To create a compressed Sun Raster image file, run the bin2sun command with the '-c' option.
-- Run the command *bin2sun -c DEMO* to run the bin2sun with the option -c and the file name **DEMO**.
+- To create a compressed Sun Raster image file, run the bin2sun program with the '-c' option.
+- Run the command *bin2sun -c DEMO* to run the bin2sun program with the option -c and the file name **DEMO**.
 - The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and color table data in the Sun RLE compressed format.  This is often smaller than the uncompressed data size.
 
 # Display the image with the view program.  
