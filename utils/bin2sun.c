@@ -130,14 +130,14 @@ void writeSunHeader(FILE* f_out, int rle) {
 	      '\x00', '\x00', '\x01', '\x00',   //image width = 256 pixels
 				'\x00', '\x00', '\x00', '\xC0',   //image height = 192 pixels
 				'\x00', '\x00', '\x00', '\x01',   //image depth = 1 plane
-				'\x00', '\x00', '\x00', '\x02',   //raster data type 2 = rle compresion
 				'\x00', '\x00', '\x00', '\x00',   //bitmap data length will go here
+				'\x00', '\x00', '\x00', '\x02',   //raster data type 2 = rle compresion
 				'\x00', '\x00', '\x00', '\x02',   //color map type 2 = raw bytes (not rgb)
 				'\x00', '\x00', '\x00', '\x00'};  //color table length will go here
 	
 				if (!rle) {
 					  //change data type byte to uncompressed
-						header[19] = '\x01';
+						header[23] = '\x01';
 				} //if !rle
 				
 	//Write the 32 byte Sun Raster header 
@@ -159,11 +159,11 @@ void writeLengths(int b_size, int c_size, FILE* f_out) {
 	buf[2] = ((b_size >> 8) & 0xFF);
 	
 	//move to bit map length 20 bytes from beginning
-	fseek(f_out, 20, SEEK_SET);
+	fseek(f_out, 16, SEEK_SET);
   fwrite(buf, 1, 4, f_out);	
 	
-	//skip over 4 bytes for color map type
-	fseek(f_out, 4, SEEK_CUR);
+	//skip over 8 bytes for data type and color map type
+	fseek(f_out, 8, SEEK_CUR);
 	//Write the color map length next, swapping byte order for big endian form
 	buf[3] = c_size & 0xFF;
 	buf[2] = (c_size >> 8) & 0xFF;

@@ -1,10 +1,9 @@
 # Create a Sun Raster Image
 
-Making an image program using your own image involves four major steps.
+Making a Sun Raster image using your own image involves three major steps.
 - Set up pre-requisites and install [Convert9118 Conversion program.](http://harmlesslion.com/cgi-bin/onesoft.cgi?2).
-- Converting the image to raw binary files using [Convert9918](https://github.com/tursilion/convert9918).
-- Converting raw binary files to a Sun Raster Image file.
-- Assemble the demo program using [Asm/02](https://github.com/fourstix/Asm-02/releases).
+- Convert the image to raw binary files using [Convert9918](https://github.com/tursilion/convert9918).
+- Convert the raw binary files to a Sun Raster Image file using bin2sun utility program.
 
 ## Setup Pre-requisites and Install the Convert9918 Conversion program
 The Convert9918 is a Windows program, so these instructions will set up the pre-requisites under Windows. 
@@ -21,7 +20,7 @@ The Convert9918 is a Windows program, so these instructions will set up the pre-
   </td></tr>
   <tr><td>Convert9918 Image Conversion</td></td></tr>
   </table>
-- Press Save, and the dialog change the type to "Raw Files".  Note saving the image into any other type of   file will not work.  The *bin2asm1802* program requires raw binary files without any headers.
+- Press Save, and the dialog change the type to "Raw Files".  Note saving the image into any other type of file will not work.  The *bin2asm1802* program requires raw binary files without any headers.
 - Enter a file name, such as *demo*. Do not enter an extension.
   <table>
   <tr><td>
@@ -34,15 +33,15 @@ The Convert9918 is a Windows program, so these instructions will set up the pre-
 # Convert the raw binary files to a Sun Raster Image file.
 - Copy the two files **DEMO.TIAP** and **DEMO.TIAC** into the same directory as the **bin2sun** program.
 - The command syntax is *bin2sun [-c]* **filename** where filename is the file name for the TIAP and TIAC files.
-- Run command *bin2sun DEMO* to run the bin2sun with the parameter **DEMO**.
+- Run command *bin2sun DEMO* to run the bin2sun program with the parameter **DEMO**.
 - The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and color table data in the uncompressed format.
-- To create a compressed Sun Raster image file, run the bin2sun command with the '-c' option.
-- Run the command *bin2sun -c DEMO* to run the bin2sun with the option -c and the file name **DEMO**.
+- To create a compressed Sun Raster image file, run the bin2sun program with the '-c' option.
+- Run the command *bin2sun -c DEMO* to run the bin2sun program with the option -c and the file name **DEMO**.
 - The conversion program will create a file named **DEMO.ras**.  This Sun Raster image file contains the image bitmap pattern data and color table data in the Sun RLE compressed format.  This is often smaller than the uncompressed data size.
 
 # Display the image with the view program.  
-- If desired, rename the assembled program to something more meaningful, like *hatteras.ras*.
-- Download the program to the 1802-Mini and run the view program to display it.
+- If desired, rename the image file to something more meaningful, like *hatteras.ras*.
+- Download the image file to the 1802-Mini and run the view program to display it.
 - Run the Elf/OS program *view hatteras.ras* to display the demo image data in the **hatteras.ras** file.
 
 Sun Raster Image Format
@@ -56,8 +55,8 @@ The color map data is followed by the bitmap data, either uncompressed or compre
 <tr><td>0004h:</td><td>00</td><td>00</td><td>01</td><td>00</td><td>Image width = 256 pixels</td></tr>
 <tr><td>0008h:</td><td>00</td><td>00</td><td>00</td><td>C0</td><td>Image height = 192 pixels</td></tr>
 <tr><td>000Ch:</td><td>00</td><td>00</td><td>00</td><td>01</td><td>Image depth = 1 plane</td></tr>
-<tr><td>0010h:</td><td>00</td><td>00</td><td>00</td><td>xx</td><td>Data type: xx</td></tr>
-<tr><td>0014h:</td><td>00</td><td>00</td><td>aa</td><td>bb</td><td>Bitmap data length: aabbh</td></tr>
+<tr><td>0010h:</td><td>00</td><td>00</td><td>aa</td><td>bb</td><td>Bitmap data length: aabbh</td></tr>
+<tr><td>0014h:</td><td>00</td><td>00</td><td>00</td><td>xx</td><td>Data type: xx</td></tr>
 <tr><td>0018h:</td><td>00</td><td>00</td><td>00</td><td>02</td><td>Color Map data type = 02</td></tr>
 <tr><td>001Ch:</td><td>00</td><td>00</td><td>cc</td><td>dd</td><td>Color Map data length: ccddh</td></tr>
 <tr><td>0020h:</td><td colspan="4"> Color Map Data</td><td>(ccddh bytes)</td></tr>
@@ -67,10 +66,10 @@ The color map data is followed by the bitmap data, either uncompressed or compre
 **Notes:**
 - Header size is 32 bytes, consisting of eight 4-byte big-endian integers.
 - Data Type xx is either 01 for uncompressed, or 02 for Sun RLE compressed data. Other data types are not supported.
-- Bitmap length aabbh is 1800h for uncompressed data.
+- Bitmap length aabb is 1800h (or 6144) bytes for uncompressed data.
 - Only color map data type 02 for Raw Color Map Data is supported. RGB format is not supported.
-- Color map length ccddh is 1800h for uncompressed data.
-- Total data size is 3020h (or 12,320) bytes for an uncompressed image.
+- Color map length ccdd is 1800h (or 6144) bytes for uncompressed data.
+- Total size, including header size, is 3020h (or 12,320) bytes for an uncompressed image.
 
 Sun RLE Algorithm
 -----------------
