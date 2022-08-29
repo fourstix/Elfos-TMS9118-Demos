@@ -65,9 +65,9 @@
 ;     +-------------------+ 000Ch 
 ;  4  | 00 | 00 | 00 | 01 |  image depth = 1 plane
 ;     +-------------------+ 0010h 
-;  5  | 00 | 00 | 00 | xx |  data type xx: 01 = uncompressed, 02 = Sun rle compression
+;  5  | 00 | 00 | aa | bb |  bitmap data length = aabbh (Uncompressed length is 1800h bytes)
 ;     +-------------------+ 0014h 
-;  6  | 00 | 00 | aa | bb |  bitmap data length = aabbh (Uncompressed length is 1800h bytes)
+;  6  | 00 | 00 | 00 | xx |  data type xx: 01 = uncompressed, 02 = Sun rle compression
 ;     +-------------------+ 0018h 
 ;  7  | 00 | 00 | 00 | 02 |  color data type: 02 = raw data 
 ;     +-------------------+ 001Ch 
@@ -776,10 +776,10 @@ sun_headr: db   059h, 0a6h, 06ah, 095h   ; magic number for Sun Raster format
            db   0,    0,    01h,  00h    ; image width = 256 pixels
            db   0,    0,    0,    0C0h   ; image height = 192 pixels
            db   0,    0,    0,    001h   ; image depth = 1 plane 
-           db   0,    0,    0            
-           db   01h            ; raster data type 1 = no compression
            db   0,    0    
            db   018h, 00h      ; length = 0x1800 or 6614 bytes
+           db   0,    0,    0            
+           db   01h            ; raster data type 1 = no compression
            db   0,    0,    0
            db   02h            ; color map type 2 = raw bytes (not rgb)
            db   0,    0
@@ -804,10 +804,10 @@ hbuffer:   db   0, 0, 0, 0   ; magic number
            db   0, 0, 0, 0   ; image width
            db   0, 0, 0, 0   ; image height
            db   0, 0, 0, 0   ; image depth
-           db   0, 0, 0
-rtype:     db   0            ; data type 01 for standard, 02 for rle
            db   0, 0    
 bsize:     db   0, 0         ; length = 0x1800 or 6614 bytes
+           db   0, 0, 0
+rtype:     db   0            ; data type 01 for standard, 02 for rle
            db   0, 0, 0
 mtype:     db   0            ; color map type = 02 for raw bytes (not rgb)
            db   0, 0
