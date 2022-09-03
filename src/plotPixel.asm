@@ -49,7 +49,9 @@
 #include    include/kernel.inc
 #include    include/ops.inc
 #include    include/vdp.inc
-#include    include/charset.inc
+
+; need to access charset font
+#include    lib/charset.inc
 
 #define cr  13
 #define lf  10

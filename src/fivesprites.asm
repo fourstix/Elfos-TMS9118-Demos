@@ -46,12 +46,12 @@
 fivesprites:  br      main
                                                   
               ; Build information                          
-              db      8+80h              ; month
-              db      31                 ; day
+              db      9+80h              ; month
+              db      3                  ; day
               dw      2022               ; year
               dw      2                  ; build
                         
-              db      'Copyright 2021 by Gaston Williams',0              
+              db      'Copyright 2022 by Gaston Williams',0              
 
 main:         ; init sprite position data
               mov  rf, SPRITE_ATTR
