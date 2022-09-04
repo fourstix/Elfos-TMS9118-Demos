@@ -2,36 +2,9 @@
 A set of Elf/OS Demo programs for the [1802-Mini TMS9x18 Video Card](https://github.com/dmadole/1802-Mini-9918-Video) by David Madole. These demos are based on programs originally written by Glen Jolly and posted in the
 files section of the COSMAC ELF Group in the [Glenn Jolly/TMS9118](https://groups.io/g/cosmacelf/files/Glenn%20Jolly/TMS9118) folder at groups.io.  These programs were all assembled into 1802 binary files using the [Asm/02 1802 Assembler](https://github.com/rileym65/Asm-02) by Mike Riley.
 
-Platform  
+Library 
 --------
-These commands were written to run on an [1802-Mini](https://github.com/dmadole/1802-Mini) with the [1802-Mini TMS9918 Video Card](https://github.com/dmadole/1802-Mini-9918-Video) created by David Madole.  A lot of information and software for the 1802-Mini can be found in the [COSMAC ELF Group](https://groups.io/g/cosmacelf) at groups.io.
-
-1802-2 Mini Configuration  
--------------------------
-Card Groups and Ports
--------------------------
-<table>
-<tr><th>Group</th><th>Ports</th><th>Card</th></tr>
-<tr><td rowspan = "2">ALL</td><td>1</td><td>Expander</td></tr>
-<tr><td>4</td><td>Front Panel</td></tr>
-<tr><td rowspan = "3">00</td><td>2,3</td><td>Disk</td></tr>
-<tr><td>5</td><td>Clock</td></tr>
-<tr><td>6,7</td><td>UART</td></tr>
-<tr><td>01</td><td>6,7</td><td>Video</td></tr>
-</table>
-
-External Flags
--------------------------
-<table>
-<tr><th>Flag</th><th>Card</th><th>Function</th></tr>
-<tr><td>/EF1</td><td>Video</td><td>VDP Interrupt</td></tr>
-<tr><td>/EF2</td><td>Processor</td><td>Software IO</td></tr>
-<tr><td>/EF3</td><td>(none)</td><td>(unassigned)</td></tr>
-<tr><td>/EF4</td><td>Front Panel</td><td>Input Button</td></tr>
-</table>
-
-If your configuration is different from the above, edit the vdp.inc file and 
-change the constants to match.  Then re-assemble the code with the updated vdp.inc file.
+These commands were written to use the [TMS9X18 Video Library](https://github.com/fourstix/Elfos-TMS9X18-Library) so that the same code can run on multiple hardware configurations without the need to be re-assembled.  The library API communicates to the video card hardware through the [TMS9x18 Video Driver](https://github.com/fourstix/Elfos-TMS9X18-Driver) so that the program code doesn't need to be modified to match the hardware differences.
 
 Elf/OS TMS9118 Demos
 -------------------------------------
