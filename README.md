@@ -88,6 +88,7 @@ Repository Contents
   * demo.asm - Template to make your own demo program.
   * fivesprites.asm - Demo with five sprites, the last one moving up and down.
   * fivesprites_noq.asm - Five sprites demo without using the Q bit.
+  * hello.asm - Demo to display "Hello,World!" greeting in text mode.
   * lena.asm - Demo to display a test bitmap.
   * mackaw.asm - Demo to display a test bitmap.
   * mandrill.asm - Demo to display a test bitmap.

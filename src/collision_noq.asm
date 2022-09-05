@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------
-;                      collision
+;                      collision_noq
 ;
 ; Demo of sprite collision detection, as a projectile hits 
 ; a target the target changes color.  Press input to exit.
@@ -77,7 +77,6 @@ main:       call checkVideo   ; verify vdp driver is loaded in memory
 ;                   Command loop
 ; -----------------------------------------------------------
             mov  rc, 0        ; init frame counter
-            req               ; make sure q is off initially
             
 SET_POSITION_PTR:
             mov  rb, PROJECTILE_SPRITE_XPOS
@@ -101,7 +100,6 @@ CHK_FRAME:  call readStatus   ; READ VDP status, D holds status byte
             mov  ra, SPRITE_POS0+3
             ldi  COLOR_DARK_RED
             str  ra            ; set color
-            req
             lbr  DONE_COLLISION
             
             ; change color of target to black at collision
@@ -173,4 +171,4 @@ PROJECTILE_SPRITE_XPOS:
             db   105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
             db   121, 122, 123, 124, 125, 126, 127, 127, 127, 0,   0
 
-        end collision
+        end collision_noq
