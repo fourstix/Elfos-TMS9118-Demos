@@ -1,0 +1,1 @@
+[Your Path]\Link02\link02 -e -s %* -l lib\vdp_video.lib

@@ -1,12 +1,19 @@
-; set these values to match your 1802-Mini Video Card settings
-#define VDP_DAT_P     6       ; data port
-#define VDP_REG_P     7       ; register and address port
-#define VDP_GROUP     1       ; video card group
+; Kernel vector for Video Driver
+O_VIDEO:            equ 0456h
 
-; comment out this next line if not using an exapnder card
-#define EXP_PORT      1       ; expander card group port
-
-#define DEF_GROUP     0       ; default group for 1802-Mini
+; Video Driver functions
+V_SET_ADDRESS:      equ 00h
+V_SET_GROUP:        equ 01h
+V_RESET_GROUP:      equ 02h
+V_WRITE_VREG:       equ 03h
+V_FILL_VRAM:        equ 04h
+V_WRITE_DATA:       equ 05h
+V_FILL_SEQ:         equ 06h
+V_WRITE_BYTE:       equ 07h
+V_READ_STATUS:      equ 08h
+V_WRITE_RLE:        equ 09h
+V_GET_BYTE:         equ 0ah
+V_SET_BYTE:         equ 0bh 
 
 ; TI VDP colors
 COLOR_TRANSPARENT:  equ 00h
@@ -26,7 +33,22 @@ COLOR_MAGENTA:      equ 0dh
 COLOR_GRAY:         equ 0eh
 COLOR_WHITE:        equ 0fh
 
+
+; VDP Graphics Mode 2 addresses
+V_VDP_MEMORY:       equ 4000h
+V_BITMAP_PATTERN:   equ 4000h
+V_CHAR_PATTERN:     equ 4000h 
+V_CHAR_NAMES:       equ 4800h
+V_COLOR_TABLE:      equ 6000h
+V_NAME_TABLE:       equ 7800h
+V_SPRITE_PATTERN:   equ 5800h
+V_SPRITE_ATTRIB:    equ 7B00h
+
+; Other VDP constants
+V_VDP_KEEP:         equ  00h 
+V_VDP_RESET:        equ  0FFh
+
 ; Sun Raster file
-BITMAP_OFFSET:     equ 01820h    ; after header and color map (uncompressed only)
-COLORMAP_OFFSET:   equ 00020h    ; after header (always)
-HEADER_SIZE:       equ 32        ; 32 bytes in header
+BITMAP_OFFSET:      equ 01820h    ; after header and color map (uncompressed only)
+COLORMAP_OFFSET:    equ 00020h    ; after header (always)
+HEADER_SIZE:        equ 32        ; 32 bytes in header
