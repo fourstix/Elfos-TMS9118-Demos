@@ -1,14 +1,13 @@
 # Elfos-TMS9118-Demos
-A set of Elf/OS Demo programs for the [1802-Mini TMS9x18 Video Card](https://github.com/dmadole/1802-Mini-9918-Video) by David Madole. These demos are based on programs originally written by Glen Jolly and posted in the
-files section of the COSMAC ELF Group in the [Glenn Jolly/TMS9118](https://groups.io/g/cosmacelf/files/Glenn%20Jolly/TMS9118) folder at groups.io.  These programs were all assembled into 1802 binary files using the [Asm/02 1802 Assembler](https://github.com/rileym65/Asm-02) by Mike Riley and linked to the library files using the [Link/02 1802 Linker](https://github.com/rileym65/Link-02) also by Mike Riley.
+Version 2 of Elf/OS Demo programs for the [1802-Mini TMS9x18 Video Card](https://github.com/dmadole/1802-Mini-9918-Video) by David Madole and the [Pico/Elf v2 TMS9118/9918 Color Board](http://www.elf-emulation.com/hardware.html) by Mike Riley.  These demos are based on programs originally written by Glenn Jolly and posted in the files section of the COSMAC ELF Group in the [Glenn Jolly/TMS9118](https://groups.io/g/cosmacelf/files/Glenn%20Jolly/TMS9118) folder at groups.io.  These programs were all assembled into 1802 binary files using the [Asm/02 1802 Assembler](https://github.com/rileym65/Asm-02) by Mike Riley and linked to the TMS9X18 library file to create binaries using the [Link/02 1802 Linker](https://github.com/rileym65/Link-02) also by Mike Riley.
 
 Library 
 --------
-These commands were written to use the [TMS9X18 Video Library](https://github.com/fourstix/Elfos-TMS9X18-Library) so that the same code can run on multiple hardware configurations without the need to be re-assembled.  The library API communicates to the video card hardware through the [TMS9x18 Video Driver](https://github.com/fourstix/Elfos-TMS9X18-Driver) so that the program code doesn't need to be modified to match the hardware differences. The code is assembled as object files and the link to the vdp_video.lib library file.
+These version 2 TMS9118 demo programs were written to use the [TMS9X18 Video Library](https://github.com/fourstix/Elfos-TMS9X18-Library) so that the same code can run on multiple hardware configurations without the need to be re-assembled.  The library API communicates to the video card hardware through the [TMS9x18 Video Driver](https://github.com/fourstix/Elfos-TMS9X18-Driver) so that the program code doesn't need to be modified to match the hardware differences. The code is assembled as object files and linked to the TMS9X18 vdp_video.lib library file.  The binaries created by the linker end with the *.elfos* extension.
 
 Version 1
 ----------
-The original version of these programs is stil available in the [version_1 branch](https://github.com/fourstix/Elfos-TMS9118-Demos/tree/version_1) on this repsository.  Version 1 programs do not use the TMS9X18 library and must be assembled with the appropriate hardware port definitions in vdp.inc.
+The original version 1 TMS9118 demo programs are still available in the [version_1 branch](https://github.com/fourstix/Elfos-TMS9118-Demos/tree/version_1) on this repository.  Version 1 programs do not use the TMS9X18 library and must be assembled with the appropriate hardware port definitions in vdp.inc.
  
 Elf/OS TMS9118 Demos
 -------------------------------------
