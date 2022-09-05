@@ -6,6 +6,10 @@ Library
 --------
 These commands were written to use the [TMS9X18 Video Library](https://github.com/fourstix/Elfos-TMS9X18-Library) so that the same code can run on multiple hardware configurations without the need to be re-assembled.  The library API communicates to the video card hardware through the [TMS9x18 Video Driver](https://github.com/fourstix/Elfos-TMS9X18-Driver) so that the program code doesn't need to be modified to match the hardware differences. The code is assembled as object files and the link to the vdp_video.lib library file.
 
+Version 1
+----------
+The original version of these programs is stil available in the [version_1 branch](https://github.com/fourstix/Elfos-TMS9118-Demos/tree/version_1) on this repsository.  Version 1 programs do not use the TMS9X18 library and must be assembled with the appropriate hardware port definitions in vdp.inc.
+ 
 Elf/OS TMS9118 Demos
 -------------------------------------
 ## blank
@@ -30,6 +34,9 @@ the other 4. The fourth sprite changes color when the fifth passes by. Press Inp
 ## fivesprites_noq
 Same five sprites demo program as above, except this version does not change the Q bit during 
 the demo. Press Input to end.
+
+## hello
+The program displays the greeting "Hello,World!" in white text on a blue background.
 
 ## lena
 This program displays a bitmap of the model Lena Forsen.
@@ -65,8 +72,8 @@ Display a Sun Raster image file *filename*.  Supports uncompressed and Sun RLE c
 
 Show the Sun Raster image files in a directory specified by *path*. If *path* is not specified then the current directory is used. Press input to end the slideshow before all images are shown. The *-r* option will cause the slide show to repeat in a loop until input is pressed. 
 
-Library Files
--------------
+Elf/OS Lbr File
+---------------
 The demo files are grouped into an Elf/OS library file *tms9118.lbr* that can be unpacked with the Elf/OS lbr command using the e option to *extract* files. Extract these demo files with the Elf/OS command *lbr e tms9118*
 
 [Make Your Own Demo](docs/MAKEYOUROWN.md)
