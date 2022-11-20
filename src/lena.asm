@@ -45,10 +45,10 @@ lena:       br      main
                         
             ; Build information
                         
-            db      8+80h              ; month
-            db      31                 ; day
+            db      11+80h             ; month
+            db      20                 ; day
             dw      2022               ; year
-            dw      2                  ; build
+            dw      3                  ; build
                         
             db      'Copyright 2022 by Gaston Williams',0
                         

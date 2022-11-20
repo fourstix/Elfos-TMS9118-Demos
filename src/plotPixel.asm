@@ -50,9 +50,6 @@
 #include    include/ops.inc
 #include    include/vdp.inc
 
-; need to access charset font
-#include    lib/charset.inc
-
 #define cr  13
 #define lf  10
 
@@ -75,10 +72,10 @@
 plotPixel:  br      main
             ; Build information
                       
-            db      08+80h             ; month
-            db      31                 ; day
+            db      11+80h             ; month
+            db      20                 ; day
             dw      2022               ; year
-            dw      2                  ; build
+            dw      3                  ; build
                       
             db      'Copyright 2022 by Gaston Williams',0
           
@@ -131,18 +128,27 @@ LPIX:       lda  rf            ; get coordinate pair ra.0, rb.0
             dw START_BITMAP
             
             ; Annotate plot
+            ldi  02 
+            plo  r9             ; set x = 2
+            ldi  03          
+            phi  r9             ; set y = 3
             call setG2CharXY   ; convert co-ords from char to graphics address
-            db   2, 3
             mov  rf, TITLE_BUF
             call drawG2String
               
+            ldi  19 
+            plo  r9             ; set x = 19
+            ldi  03          
+            phi  r9             ; set y = 3            
             call setG2CharXY
-            db   21, 3
             mov  rf, PLOT_NAME
             call drawG2String
-            
+
+            ldi  19 
+            plo  r9             ; set x = 19
+            ldi  04          
+            phi  r9             ; set y = 4                        
             call setG2CharXY
-            db   21, 4
             mov  rf, PLOT_RANGE
             call drawG2String
             
@@ -245,12 +251,7 @@ textBuff:   db  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 TITLE_BUF:  db  'Plot Demo', 0
 PLOT_NAME:  db  'Sin(X)/X', 0
-#ifdef TI99_FONT
-PLOT_RANGE: db  'X+-3.5pi', 0
-#else
-; 241 and 227 are the ascii codes for the +- and pi symbols
-PLOT_RANGE: db  'X  ', 241, '3.5', 227, 0
-#endif
+PLOT_RANGE: db  'X +/- 3.5*pi', 0
 
 pixelTable: db  080h, 040h, 020h, 010h, 008h, 004h, 002h, 001h ; pixel to be set ON
 

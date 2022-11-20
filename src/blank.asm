@@ -32,16 +32,17 @@
             extrn beginG2Mode
             extrn setBackground
             extrn sendNames
+            extrn clearInfo
             extrn endG2Mode
             
             org     2000h
 blank:      br      main
             
             ; Build information                        
-            db      8+80h              ; month
-            db      29                 ; day
+            db      11+80h             ; month
+            db      20                 ; day
             dw      2022               ; year
-            dw      2                  ; build
+            dw      3                  ; build
                         
             db      'Copyright 2022 by Gaston Williams',0                                    
             
@@ -54,6 +55,8 @@ main:       call checkVideo     ; verify vdp driver is loaded in memory
             call setBackground
 
             call sendNames
+            
+            call clearInfo      ; clear user info in memory
             
             ldi  V_VDP_KEEP     ; Set D to keep vdp display after exit
             call endG2Mode      ; end graphics mode 2

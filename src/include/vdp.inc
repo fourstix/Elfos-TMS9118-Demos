@@ -14,6 +14,9 @@ V_READ_STATUS:      equ 08h
 V_WRITE_RLE:        equ 09h
 V_GET_BYTE:         equ 0ah
 V_SET_BYTE:         equ 0bh 
+V_GET_INFO:         equ 0ch
+V_SET_INFO:         equ 0dh
+V_GET_VERSION:      equ 0eh 
 
 ; TI VDP colors
 COLOR_TRANSPARENT:  equ 00h
@@ -38,11 +41,11 @@ COLOR_WHITE:        equ 0fh
 V_VDP_MEMORY:       equ 4000h
 V_BITMAP_PATTERN:   equ 4000h
 V_CHAR_PATTERN:     equ 4000h 
-V_CHAR_NAMES:       equ 4800h
 V_COLOR_TABLE:      equ 6000h
 V_NAME_TABLE:       equ 7800h
 V_SPRITE_PATTERN:   equ 5800h
 V_SPRITE_ATTRIB:    equ 7B00h
+V_CHAR_NAMES:       equ 4800h
 
 ; Other VDP constants
 V_VDP_KEEP:         equ  00h 
