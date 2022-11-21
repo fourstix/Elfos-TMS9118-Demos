@@ -47,6 +47,7 @@ The ASCII control characters are supported through escape sequences that begin w
 <tr><td>\e[m</td><td>Reset text style and color</td><td>Same as \e[0m</td></tr>
 <tr><td>\e[0m</td><td>Reset text style and color</td><td>The foreground and background colors are set to their default values.</td></tr>
 <tr><td>\e[1m</td><td>Bright color</td><td>If no color specified in sequence, set foreground color bright (intense).</td></tr>
+<tr><td>\e[2J</td><td>Clear Screen</td><td>Clear Screen, Home Cursor and Exit.</td></tr>
 <tr><td>\e[2m</td><td>Dim color</td><td>If no color specified in sequence, set foreground color dim (normal).</td></tr>
 <tr><td>\e[30m to \e[37m</td><td>Set foreground color</td><td>See table below for color values.</td></tr>
 <tr><td>\e[40m to \e[47m</td><td>Set background color</td><td>See table below for color values.</td></tr>
@@ -131,51 +132,60 @@ The ASCII control characters are supported through escape sequences that begin w
 
 **Notes:**
 - The default background color is Black (\e[47m).
-- Bright Black (\e[1;40m) and (Normal) White (\e[47m) are both mapped to the same TMS9X18 color Gray (E).
+- Bright Black (\e[1;40m) and (Normal) White (\e[47m) are both mapped to the same TMS9X18 color, Gray (E).
 
-## ANSI Blink Color Values
+## ANSI Blink Color Shift
 
 ANSI foreground and background color indexes are represented as 4-bit hex numbers, bit numbered as bit 3,2,1,0. For the ANSI sequence \e[5m (Blink) the foreground and background colors are shifted by toggling bit 2 (xor 0x04) of the 4-bit ANSI color index value, and then the foreground and background colors are swapped.  Bit 3 of the 4-bit color index value is used as the Intensity (Bright) bit and is not changed.  The table below gives the following ANSI color pairs. The blink sequence shifts colors between the values on each row.
 
 <table>
-<tr><th colspan="4">Normal Color Pairs</th></tr>
+<tr><th colspan="4">Normal (Dim) Color Pairs</th></tr>
 <tr><th>Index Value</th><th>Color</th><th>Index Value</th><th>Color</th></tr>
 <tr><td>0</td><td>Black</td><td>4</td><td>Blue</td></tr>
 <tr><td>1</td><td>Red</td><td>5</td><td>Magenta</td></tr>
 <tr><td>2</td><td>Green</td><td>6</td><td>Cyan</td></tr>
-<tr><td>3</td><td>Yellow</td><td>7</td><td>White</td></tr>
-<tr><th colspan="4">Bright Color Pairs</th></tr>
+<tr><td>3</td><td>Yellow</td><td>7</td><td>Gray (Dim White)</td></tr>
+<tr><th colspan="4">Bright (Intense) Color Pairs</th></tr>
 <tr><th>Index Value</th><th>Color</th><th>Index Value</th><th>Color</th></tr>
-<tr><td>8</td><td>Black</td><td>C</td><td>Blue</td></tr>
-<tr><td>9</td><td>Red</td><td>D</td><td>Magenta</td></tr>
-<tr><td>A</td><td>Green</td><td>E</td><td>Cyan</td></tr>
-<tr><td>B</td><td>Yellow</td><td>F</td><td>White</td></tr>
+<tr><td>8</td><td>Gray (Intense Black)</td><td>C</td><td>Bright Blue</td></tr>
+<tr><td>9</td><td>Bright Red</td><td>D</td><td>Bright Magenta</td></tr>
+<tr><td>A</td><td>Bright Green</td><td>E</td><td>Bright Cyan</td></tr>
+<tr><td>B</td><td>Bright Yellow</td><td>F</td><td>Bright White</td></tr>
 </table>
 
 
 ANSI Parser State Machine
 -------------------------
 <table>
-<tr><th>State</th><th>Character</th><th>Next State</th><th>Action</th></tr>
-<tr><td>Start</td><td>\e[</td><td>ANSI Seq Begin</td><td>Begin Parsing ANSI Command String</td></tr>
-<tr><td rowspan="9">ANSI Seq Begin</td><td>(peak) m</td><td>Reset</td><td></td></tr>
-<tr><td>0</td><td>Reset</td><td></td></tr>
-<tr><td>1</td><td>ANSI Seq End</td><td>Bright, Set Intensity flag</td></tr>
-<tr><td>2, (peak) J</td><td>Exit</td><td>Clear Screen</td></tr>
-<tr><td>2</td><td>ANSI Seq End</td><td>Dim, Clear Intensity flag</td></tr>
-<tr><td>3</td><td>Set Foreground Color</td><td></td></tr>
-<tr><td>4</td><td>Set Background Color</td><td></td></tr>
-<tr><td>5</td><td>Blink</td><td>Shift fg and bg colors, swap</td></tr>
-<tr><td>7</td><td>Reverse</td><td>Swap fg and bg colors</td></tr>
-<tr><td>Reset</td><td></td><td>ANSI Seq End</td><td>Set fg and bg to default, clear Intensity flag</td></tr>
-<tr><td>Set Foreground Color</td><td>0-7 (Color Index)</td><td>ANSI Seq End</td><td>Set fg based on index and intensity flag, clear intensity flag</td></tr>
-<tr><td>Set Background Color</td><td>0-7 (Color Index)</td><td>ANSI Seq End</td><td>Set bg based on index and intensity flag, clear intensity flag</td></tr>
-<tr><td>Blink</td><td></td><td>ANSI Seq End</td><td>Shift fg and bg colors and swap</td></tr>
-<tr><td>Reverse</td><td></td><td>ANSI Seq End</td><td>Swap fg and bg colors</td></tr>
-<tr><td rowspan="2">ANSI Seq End</td><td>m</td><td>Exit</td><td>Set Colors based on ANSI Command</td></tr>
-<tr><td>;</td><td>ANSI Seq Begin</td><td>Continue Parsing ANSI Command</td></tr>
-<tr><td>(Any State)<td>Unknown</td><td>Exit</td><td>Print "^[?" to indicate error</td></tr>
+<tr><th>State</th><th>Character</th><th>Action</th><th>Next State</th></tr>
+<tr><td>Start</td><td>\e[</td><td>Begin Parsing ANSI Command String</td><td>Begin ANSI Seq</td></tr>
+<tr><td rowspan="10">Begin ANSI Seq</td><td>(peak) m</td><td rowspan="3">Reset, Set fg and bg to default, clear Intensity flag</td><td rowspan="6">End ANSI Seq</td></tr>
+<tr><td>(peak) ;</td></tr>
+<tr><td>0</td></tr>
+<tr><td>1</td><td>Bright, Set Intensity flag</td></tr>
+<tr><td>2, (peak) J</td><td>Clear Screen and Home Cursor</td></tr>
+<tr><td>2</td><td>Dim, Clear Intensity flag</td></tr>
+<tr><td>3</td><td>(Next character determines foreground color)</td><td>Set Foreground Color</td></tr>
+<tr><td>4</td><td>(Next character determines background color)</td><td>Set Background Color</td></tr>
+<tr><td>5</td><td>Blink, Shift fg and bg colors, swap</td><td rowspan="4">End ANSI Seq</td></tr>
+<tr><td>7</td><td>Reverse, Swap fg and bg colors</td></tr>
+<tr><td>Set Foreground Color</td><td>0-7 (Color Index)</td><td>Set fg color based on index and intensity flag, clear intensity flag</td></tr>
+<tr><td>Set Background Color</td><td>0-7 (Color Index)</td><td>Set bg color based on index and intensity flag, clear intensity flag</td></tr>
+<tr><td rowspan="3">End ANSI Seq</td><td>;</td><td>Continue Parsing ANSI Graphics Command</td><td>Begin ANSI Seq</td></tr>
+<tr><td>m</td><td>Set Colors based on ANSI Graphics Command and Exit</td><td rowspan="3">Exit</td></tr>
+<tr><td>J</td><td>(Exit after ANSI Erase Command)</td></tr>
+<tr><td>(Any State)<td>Unexpected Character</td><td>Print "^[?" to indicate error and Exit</td></tr>
 </table>
+
+**Note:**
+- "Start" is the initial state, and "Exit" is the final state.
+- The ASCII escape character represented by \e could also be represented by \x1b. 
+- (peak) means the parser looks at the next character, without consuming it. The character will be consumed at the next state.
+- The parsed ANSI string should end with an 'm' or 'J' character.
+- A semicolon (;) can be used to string several ANSI graphic sequences together in single command.
+- The ANSI graphics command always ends with an 'm' character and the text color updates are done when the end character is encountered.
+- An empty sequence, such as "\e[m" or "\e[;m", are interpreted as the default ANSI graphics sequence, Reset ("\e[0m").
+- An unexpected character will end the parser with an error message, "^[?".
 
 References
 ----------
@@ -198,9 +208,9 @@ License Information
   
   All libraries used in this code are copyright their respective authors.
   
-  The demos code is based on programs written by Glenn Jolly.
+  Some demos program code is based on programs originally written by Glenn Jolly.
   
-  TMS9118 Demo source and binaries
+  The original TMS9118 Demo source and binaries
   Copyright (c) 2021 by Glenn Jolly
   
   Elf/OS 
