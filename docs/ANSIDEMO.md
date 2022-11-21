@@ -1,11 +1,12 @@
 # ANSI Demo
 
-The ansi demo program supports writing text strings to the TMS9X18 display. It supports escape codes for 
-several common ASCII control chracters, and it support a limited set of ANSI control strings that relate to 
+The ANSI demo program supports writing text strings to the TMS9X18 display. It supports escape codes for 
+several common ASCII control characters, and it support a limited set of ANSI control strings that relate to 
 changing text colors.
 
 ## Supported ASCII Control characters
 The ASCII control characters are supported through escape sequences that begin with the backslash (\) character.
+
 <table>
 <tr><th>Escape sequence</th><th>ASCII Name</th><th>Hex Value</th><th>Action</th></tr>
 <tr><td>\a</td><td>Alert</td><td>0x07</td><td>Toggle Inverse Text.</td></tr>
@@ -23,19 +24,23 @@ The ASCII control characters are supported through escape sequences that begin w
 <tr><td>\x</td><td>Hexadecimal byte</td><td>0xhh</td><td>Treat next two characters hh as a Hexadecimal byte value.</td></tr>
 </table>
   
-## Notes for the ASCII contrl characters
+**Notes:**
 - The sequences \r\n and \n\r are interpreted as a single new line.  
 - The sequence \\ denotes a single literal backslash character.
-- The sequence \xhh denotes a hexadecimal byte value of hh.
-- The sequence \e denotes the escape character (0x1B).
-- The sequence \c can be used to send a particular color byte such as \x4f to the display. The first
-four bits of the color byte denote the foreground and the lower four bits denote the background.
-- A zero in the upper 4 bits will leave the foreground color unchanged, and a zero in the lower 4 bits of the color byte will leave the background color unchanged.
-- Horizontal tabs do not wrap around to the next line, and vertical tabs do not wrap to the first line of the screen.
+- The sequence \xhh denotes a hexadecimal byte value of hh. For example, \x1b would give the Escape character denoted by \e.
+- The sequence \e denotes the escape character (\x1b).
+- The sequence \c can be used to send a particular color byte such as \x4f to the display. The first four bits of the color byte denote the TMS9X18 foreground color and the lower four bits denote the TMS9X18 background color.
+- A zero (Transparent color) in the upper 4 bits will leave the foreground color unchanged, and a zero in the lower 4 bits of the color byte will leave the background color unchanged.
+- Horizontal tabs do not wrap around to the next line, and vertical tabs do not wrap around to the first line of the screen.
 
 ## Supported ANSI Sequences
 
-**Note:**All ANSI Escape sequences start with the characters *\e[* (0x1b0x5b). An erase sequence ends with *J*, and only 1 erase sequence *\e[2J* (erase screen) is supported. All the other supported sequences are ANSI graphics sequences. All ANSI graphics sequences end with *m*. Multiple graphics sequences may appear in a single ANSI escape sequence separated by a *;* (semicolon).  For example the ANSI sequence *\e[1;37;44m* would set the text foreground color to Bright White and the background color to Blue.
+**Note:**
+- All ANSI Escape sequences start with the characters *\e[* (0x1b0x5b). 
+- An erase sequence ends with *J*, and only 1 erase sequence *\e[2J* (erase screen) is supported. 
+- All the other supported sequences are ANSI graphics sequences. 
+- All ANSI graphics sequences end with *m*. Multiple graphics sequences may appear in a single ANSI escape sequence separated by a *;* (semicolon).  
+- For example the ANSI sequence *\e[1;37;44m* would set the text foreground color to Bright White and the background color to Blue.
 
 <table>
 <tr><th>ANSI Sequence</th><th>Description</th><th>Notes</th></tr>
@@ -50,7 +55,7 @@ four bits of the color byte denote the foreground and the lower four bits denote
 </table>
 
 **Notes:**
-- Blink is supported by shifting and swaping the foreground and background colors, since the TMS9X18 display hardware does not directly support blinking text.
+- Blink is supported by shifting and swapping the foreground and background colors, since the TMS9X18 display hardware does not directly support blinking text.
 - The default foreground color is Bright White and the default background color is Black.
 
 ## TMS9X18 Color Values
@@ -64,6 +69,7 @@ four bits of the color byte denote the foreground and the lower four bits denote
 <tr><td>6</td><td>Dark Red</td><td>E</td><td>Gray</td></tr>
 <tr><td>7</td><td>Cyan</td><td>F</td><td>White</td></tr>
 </table>
+
 **Notes:**
 - The color byte after the \c (Device Link Escape) control character has the foreground color value in its upper 4-bits and the background color in its lower 4-bits.
 - For example, the control characters \c\xf4 will set the text color to White on Blue.
@@ -71,6 +77,7 @@ four bits of the color byte denote the foreground and the lower four bits denote
 - A value of zero (Transparent) in the color byte will not change the corresponding color value. For example, \c\x04 will not change the foreground color, but will set the background color to Blue.
 
 ## ANSI Foreground Color Values
+
 <table>
 <tr><th colspan="4">Normal (Dim) Colors</th></tr>
 <tr><th>ANSI Sequence</th><th>ANSI Color</th><th>TMS9x18 Color</th><th>TMS9x18 Value</th></tr>
@@ -93,6 +100,7 @@ four bits of the color byte denote the foreground and the lower four bits denote
 <tr><td>\e[1;36m</td><td>Bright Cyan</td><td>Light Green</td><td>3</td></tr>
 <tr><td>\e[1;37m</td><td>Bright White</td><td>White</td><td>F</td></tr>
 <table>
+
 **Notes:**
 - The default foreground color is (\e[1;37m) Bright White.
 - Bright Black (\e[1;30m) and (Normal) White (\e[37m) are both mapped to the same TMS9X18 color Gray (E).
@@ -120,6 +128,7 @@ four bits of the color byte denote the foreground and the lower four bits denote
 <tr><td>\e[1;46m</td><td>Bright Cyan</td><td>Light Green</td><td>3</td></tr>
 <tr><td>\e[1;47m</td><td>Bright White</td><td>White</td><td>F</td></tr>
 <table>
+
 **Notes:**
 - The default background color is Black (\e[47m).
 - Bright Black (\e[1;40m) and (Normal) White (\e[47m) are both mapped to the same TMS9X18 color Gray (E).
