@@ -33,31 +33,116 @@ four bits of the color byte denote the foreground and the lower four bits denote
 - A zero in the upper 4 bits will leave the foreground color unchanged, and a zero in the lower 4 bits of the color byte will leave the background color unchanged.
 - Horizontal tabs do not wrap around to the next line, and vertical tabs do not wrap to the first line of the screen.
 
-## ANSI Sequences
+## Supported ANSI Sequences
+
+**Note:**All ANSI Escape sequences start with the characters *\e[* (0x1b0x5b). An erase sequence ends with *J*, and only 1 erase sequence *\e[2J* (erase screen) is supported. All the other supported sequences are ANSI graphics sequences. All ANSI graphics sequences end with *m*. Multiple graphics sequences may appear in a single ANSI escape sequence separated by a *;* (semicolon).  For example the ANSI sequence *\e[1;37;44m* would set the text foreground color to Bright White and the background color to Blue.
 
 <table>
-<tr><th>Address</th><th colspan="4">Data Bytes</th><th>Description</th></tr>
-<tr><td>0000h:</td><td>59</td><td>A6</td><td>6A</td><td>95</td><td>Magic Number</td></tr>
-<tr><td>0004h:</td><td>00</td><td>00</td><td>01</td><td>00</td><td>Image width = 256 pixels</td></tr>
-<tr><td>0008h:</td><td>00</td><td>00</td><td>00</td><td>C0</td><td>Image height = 192 pixels</td></tr>
-<tr><td>000Ch:</td><td>00</td><td>00</td><td>00</td><td>01</td><td>Image depth = 1 plane</td></tr>
-<tr><td>0010h:</td><td>00</td><td>00</td><td>aa</td><td>bb</td><td>Bitmap data length: aabbh</td></tr>
-<tr><td>0014h:</td><td>00</td><td>00</td><td>00</td><td>xx</td><td>Data type: xx</td></tr>
-<tr><td>0018h:</td><td>00</td><td>00</td><td>00</td><td>02</td><td>Color Map data type = 02</td></tr>
-<tr><td>001Ch:</td><td>00</td><td>00</td><td>cc</td><td>dd</td><td>Color Map data length: ccddh</td></tr>
-<tr><td>0020h:</td><td colspan="4"> Color Map Data</td><td>(ccddh bytes)</td></tr>
-<tr><td>ccddh + 0020h:</td><td colspan="4"> Bitmap Data</td><td>(aabbh bytes)</td></tr>
+<tr><th>ANSI Sequence</th><th>Description</th><th>Notes</th></tr>
+<tr><td>\e[m</td><td>Reset text style and color</td><td>Same as *\e[0m*</td></tr>
+<tr><td>\e[0m</td><td>Reset text style and color</td><td>The foreground and background colors are set to their default values.</td></tr>
+<tr><td>\e[1m</td><td>Bright color</td><td>If no color specified in sequence, set foreground color bright (intense).</td></tr>
+<tr><td>\e[2m</td><td>Dim color</td><td>If no color specified in sequence, set foreground color dim (normal).</td></tr>
+<tr><td>\e[30m to \e[37m</td><td>Set foreground color</td><td></td>See table below for color values./tr>
+<tr><td>\e[40m to \e[47m</td><td>Set background color</td><td></td>See table below for color values./tr>
+<tr><td>\e[5m</td><td>Blink Text</td><td>Shift foreground and background colors by toggling bit 2 and then swap.</td></tr>
+<tr><td>\e[7m</td><td>Reverse Text</td><td>Swap foreground color with background color.</td></tr>
 </table>
 
 **Notes:**
-- Header size is 32 bytes, consisting of eight 4-byte big-endian integers.
-- Data Type xx is either 01 for uncompressed, or 02 for Sun RLE compressed data. Other data types are not supported.
-- Bitmap length aabb is 1800h (or 6144) bytes for uncompressed data.
-- Only color map data type 02 for Raw Color Map Data is supported. RGB format is not supported.
-- Color map length ccdd is 1800h (or 6144) bytes for uncompressed data.
-- Total size, including header size, is 3020h (or 12,320) bytes for an uncompressed image.
+- Blink is supported by shifting and swaping the foreground and background colors, since the TMS9X18 display hardware does not directly support blinking text.
+- The default foreground color is Bright White and the default background color is Black.
 
-S
+## TMS9X18 Color Values
+<table>
+<tr><td>0</td><td>Transparent</td><td>8</td><td>Red</td></tr>
+<tr><td>1</td><td>Black</td><td>9</td><td>Light Red</td></tr>
+<tr><td>2</td><td>Green</td><td>A</td><td>Yellow</td></tr>
+<tr><td>3</td><td>Light Green</td><td>B</td><td>Light Yellow</td></tr>
+<tr><td>4</td><td>Blue</td><td>C</td><td>Dark Green</td></tr>
+<tr><td>5</td><td>Light Blue</td><td>D</td><td>Magenta</td></tr>
+<tr><td>6</td><td>Dark Red</td><td>E</td><td>Gray</td></tr>
+<tr><td>7</td><td>Cyan</td><td>F</td><td>White</td></tr>
+</table>
+**Notes:**
+- The color byte after the \c (Device Link Escape) control character has the foreground color value in its upper 4-bits and the background color in its lower 4-bits.
+- For example, the control characters \c\xf4 will set the text color to White on Blue.
+- The default color map byte value is \xf1, White on Black.
+- A value of zero (Transparent) in the color byte will not change the corresponding color value. For example, \c\x04 will not change the foreground color, but will set the background color to Blue.
+
+## ANSI Foreground Color Values
+<table>
+<tr><th colspan="4">Normal (Dim) Colors</th></tr>
+<tr><th>ANSI Sequence</th><th>ANSI Color</th><th>TMS9x18 Color</th><th>TMS9x18 Value</th></tr>
+<tr><td>\e[30m</td><td>Black</td><td>Black</td><td>1</td></tr>
+<tr><td>\e[31m</td><td>Red</td><td>Dark Red</td><td>6</td></tr>
+<tr><td>\e[32m</td><td>Green</td><td>Dark Green</td><td>C</td></tr>
+<tr><td>\e[33m</td><td>Yellow</td><td>Yellow</td><td>A</td></tr>
+<tr><td>\e[34m</td><td>Blue</td><td>Blue</td><td>4</td></tr>
+<tr><td>\e[35m</td><td>Magenta</td><td>Magenta</td><td>D</td></tr>
+<tr><td>\e[36m</td><td>Cyan</td><td>Black</td><td>1</td></tr>
+<tr><td>\e[37m</td><td>White</td><td>Gray</td><td>E</td></tr>
+<tr><th colspan="4">Bright (Intense) Colors</th></tr>
+<tr><th>ANSI Sequence</th><th>ANSI Color</th><th>TMS9x18 Color</th><th>TMS9x18 Value</th></tr>
+<tr><td>\e[1;30m</td><td>Bright Black</td><td>Gray</td><td>E</td></tr>
+<tr><td>\e[1;31m</td><td>Bright Red</td><td>Light Red</td><td>9</td></tr>
+<tr><td>\e[1;32m</td><td>Bright Green</td><td>Green</td><td>2</td></tr>
+<tr><td>\e[1;33m</td><td>Bright Yellow</td><td>Light Yellow</td><td>B</td></tr>
+<tr><td>\e[1;34m</td><td>Bright Blue</td><td>Light Blue</td><td>5</td></tr>
+<tr><td>\e[1;35m</td><td>Bright Magenta</td><td>Red</td><td>8</td></tr>
+<tr><td>\e[1;36m</td><td>Bright Cyan</td><td>Light Green</td><td>3</td></tr>
+<tr><td>\e[1;37m</td><td>Bright White</td><td>White</td><td>F</td></tr>
+<table>
+**Notes:**
+- The default foreground color is (\e[1;37m) Bright White.
+- Bright Black (\e[1;30m) and (Normal) White (\e[37m) are both mapped to the same TMS9X18 color Gray (E).
+
+## ANSI Background Color Values
+<table>
+<tr><th colspan="4">Normal (Dim) Colors</th></tr>
+<tr><th>ANSI Sequence</th><th>ANSI Color</th><th>TMS9x18 Color</th><th>TMS9x18 Value</th></tr>
+<tr><td>\e[40m</td><td>Black</td><td>Black</td><td>1</td></tr>
+<tr><td>\e[41m</td><td>Red</td><td>Dark Red</td><td>6</td></tr>
+<tr><td>\e[42m</td><td>Green</td><td>Dark Green</td><td>C</td></tr>
+<tr><td>\e[43m</td><td>Yellow</td><td>Yellow</td><td>A</td></tr>
+<tr><td>\e[44m</td><td>Blue</td><td>Blue</td><td>4</td></tr>
+<tr><td>\e[45m</td><td>Magenta</td><td>Magenta</td><td>D</td></tr>
+<tr><td>\e[46m</td><td>Cyan</td><td>Black</td><td>1</td></tr>
+<tr><td>\e[47m</td><td>White</td><td>Gray</td><td>E</td></tr>
+<tr><th colspan="4">Bright (Intense) Colors</th></tr>
+<tr><th>ANSI Sequence</th><th>ANSI Color</th><th>TMS9x18 Color</th><th>TMS9x18 Value</th></tr>
+<tr><td>\e[1;40m</td><td>Bright Black</td><td>Gray</td><td>E</td></tr>
+<tr><td>\e[1;41m</td><td>Bright Red</td><td>Light Red</td><td>9</td></tr>
+<tr><td>\e[1;42m</td><td>Bright Green</td><td>Green</td><td>2</td></tr>
+<tr><td>\e[1;43m</td><td>Bright Yellow</td><td>Light Yellow</td><td>B</td></tr>
+<tr><td>\e[1;44m</td><td>Bright Blue</td><td>Light Blue</td><td>5</td></tr>
+<tr><td>\e[1;45m</td><td>Bright Magenta</td><td>Red</td><td>8</td></tr>
+<tr><td>\e[1;46m</td><td>Bright Cyan</td><td>Light Green</td><td>3</td></tr>
+<tr><td>\e[1;47m</td><td>Bright White</td><td>White</td><td>F</td></tr>
+<table>
+**Notes:**
+- The default background color is Black (\e[47m).
+- Bright Black (\e[1;40m) and (Normal) White (\e[47m) are both mapped to the same TMS9X18 color Gray (E).
+
+## ANSI Blink Color Values
+
+ANSI foreground and background color indexes are represented as 4-bit hex numbers, bit numbered as bit 3,2,1,0. For the ANSI sequence \e[5m (Blink) the foreground and background colors are shifted by toggling bit 2 (xor 0x04) of the 4-bit ANSI color index value, and then the foreground and background colors are swapped.  Bit 3 of the 4-bit color index value is used as the Intensity (Bright) bit and is not changed.  The table below gives the following ANSI color pairs. The blink sequence shifts colors between the values on each row.
+
+<table>
+<tr><th colspan="4">Normal Color Pairs</th></tr>
+<tr><th>Index Value</th><th>Color</th><th>Index Value</th><th>Color</th></tr>
+<tr><td>0</td><td>Black</td><td>4</td><td>Blue</td></tr>
+<tr><td>1</td><td>Red</td><td>5</td><td>Magenta</td></tr>
+<tr><td>2</td><td>Green</td><td>6</td><td>Cyan</td></tr>
+<tr><td>3</td><td>Yellow</td><td>7</td><td>White</td></tr>
+<tr><th colspan="4">Bright Color Pairs</th></tr>
+<tr><th>Index Value</th><th>Color</th><th>Index Value</th><th>Color</th></tr>
+<tr><td>8</td><td>Black</td><td>C</td><td>Blue</td></tr>
+<tr><td>9</td><td>Red</td><td>D</td><td>Magenta</td></tr>
+<tr><td>A</td><td>Green</td><td>E</td><td>Cyan</td></tr>
+<tr><td>B</td><td>Yellow</td><td>F</td><td>White</td></tr>
+</table>
+
 License Information
 -------------------
   
@@ -73,11 +158,6 @@ License Information
   
   The demos code is based on programs written by Glenn Jolly.
   
-  The Convert9918 program was written by Mike Brent (Tursi @ Harmlesslion.com).
-  
-  Convert9918 Image Conversion Program
-  Copyright (c) 2017-2022 by Mike Brent
-  
   TMS9118 Demo source and binaries
   Copyright (c) 2021 by Glenn Jolly
   
@@ -89,16 +169,7 @@ License Information
   
   The 1802-Mini Hardware
   Copyright (c) 2021-2022 by David Madole
-  
-  The bin2asm1802 Utility
-  Copyright (c) 2022 by Gaston Williams
-  
-  The bin2sun Utility
-  Copyright (c) 2022 by Gaston Williams
-  
-  Sun Rasterfile Image Specification
-  Copyright (c) 1989 by Sun Microsystems
-  
+    
   Many thanks to the original authors for making their designs and code available as open source.
    
   This code, firmware, and software is released under the [MIT License](http://opensource.org/licenses/MIT).
