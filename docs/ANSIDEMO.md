@@ -156,9 +156,20 @@ ANSI Parser
 -----------
 ```mermaid
 stateDiagram-v2
-    [*] --> Ansi Sequence : "\e["
-    Ansi Sequence --> Ansi Sequence : ";"
-    Ansi Sequence --> [*] : "m"
+    [*] --> ANSI Sequence
+    ANSI Sequence --> Continue : peak ;
+    Continue --> ANSI Sequence
+    ANSI Sequence --> Reset Colors : peak m
+    ANSI Sequence --> Reset Colors : 0
+    Reset Colors --> ANSI end
+    ANSI Sequence --> Set Intensity : 1
+    Set Intensity --> ANSI End
+    ANSI Sequence --> Clear Screen : 2, J
+    Clear Screen --> [*]
+    ANSI Sequence --> Dim : 2
+    Dim --> ANSI End
+    ANSI End --> Continue : ;
+    ANSI End --> [*] : m  
 ```
 
 References
