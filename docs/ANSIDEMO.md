@@ -21,7 +21,7 @@ The ASCII control characters are supported through escape sequences that begin w
 <tr><td>\c</td><td>Device Linked Escape</td><td>0x10</td><td>Set the next byte as the color map byte.</td></tr>
 <tr><td>\e</td><td>Escape</td><td>0x1B</td><td>Escape character for ANSI sequences.</td></tr>
 <tr><td>\\</td><td>Backslash</td><td>0x5C</td><td>Literal backslash character.</td</tr>
-<tr><td>\x</td><td>Hexadecimal byte</td><td>0xhh</td><td>Treat next two characters *hh* as a Hexadecimal byte value.</td></tr>
+<tr><td>\x</td><td>Hexadecimal byte</td><td>0xhh</td><td>Treat next two characters hh as a Hexadecimal byte value.</td></tr>
 </table>
   
 **Notes:**
@@ -152,25 +152,30 @@ ANSI foreground and background color indexes are represented as 4-bit hex number
 <tr><td>B</td><td>Yellow</td><td>F</td><td>White</td></tr>
 </table>
 
-ANSI Parser
------------
-```mermaid
-stateDiagram-v2
-    [*] --> ANSI Sequence
-    ANSI Sequence --> Continue : peak ;
-    Continue --> ANSI Sequence
-    ANSI Sequence --> Reset Colors : peak m
-    ANSI Sequence --> Reset Colors : 0
-    Reset Colors --> ANSI end
-    ANSI Sequence --> Set Intensity : 1
-    Set Intensity --> ANSI End
-    ANSI Sequence --> Clear Screen : 2, J
-    Clear Screen --> [*]
-    ANSI Sequence --> Dim : 2
-    Dim --> ANSI End
-    ANSI End --> Continue : ;
-    ANSI End --> [*] : m  
-```
+
+ANSI Parser State Machine
+-------------------------
+<table>
+<tr><th>State</th><th>Character</th><th>Next State</th><th>Action</th></tr>
+<tr><td>Start</td><td>\e[</td><td>ANSI Seq Begin</td><td>Begin Parsing ANSI Command String</td></tr>
+<tr><td rowspan="9">ANSI Seq Begin</td><td>(peak) m</td><td>Reset</td><td></td></tr>
+<tr><td>0</td><td>Reset</td><td></td></tr>
+<tr><td>1</td><td>ANSI Seq End</td><td>Bright, Set Intensity flag</td></tr>
+<tr><td>2, (peak) J</td><td>Exit</td><td>Clear Screen</td></tr>
+<tr><td>2</td><td>ANSI Seq End</td><td>Dim, Clear Intensity flag</td></tr>
+<tr><td>3</td><td>Set Foreground Color</td><td></td></tr>
+<tr><td>4</td><td>Set Background Color</td><td></td></tr>
+<tr><td>5</td><td>Blink</td><td>Shift fg and bg colors, swap</td></tr>
+<tr><td>7</td><td>Reverse</td><td>Swap fg and bg colors</td></tr>
+<tr><td>Reset</td><td></td><td>ANSI Seq End</td><td>Set fg and bg to default, clear Intensity flag</td></tr>
+<tr><td>Set Foreground Color</td><td>0-7 (Color Index)</td><td>ANSI Seq End</td><td>Set fg based on index and intensity flag, clear intensity flag</td></tr>
+<tr><td>Set Background Color</td><td>0-7 (Color Index)</td><td>ANSI Seq End</td><td>Set bg based on index and intensity flag, clear intensity flag</td></tr>
+<tr><td>Blink</td><td></td><td>ANSI Seq End</td><td>Shift fg and bg colors and swap</td></tr>
+<tr><td>Reverse</td><td></td><td>ANSI Seq End</td><td>Swap fg and bg colors</td></tr>
+<tr><td rowspan="2">ANSI Seq End</td><td>m</td><td>Exit</td><td>Set Colors based on ANSI Command</td></tr>
+<tr><td>;</td><td>ANSI Seq Begin</td><td>Continue Parsing ANSI Command</td></tr>
+<tr><td>(Any State)<td>Unknown</td><td>Exit</td><td>Print "^[?" to indicate error</td></tr>
+</table>
 
 References
 ----------
