@@ -158,7 +158,7 @@ ANSI Parser
 stateDiagram-v2
     [*] --> Ansi Sequence : "\e["
     Ansi Sequence --> Ansi Sequence : ";"
-    Ansi Sequence --> [*] : "m:
+    Ansi Sequence --> [*] : "m"
 ```
 
 References
