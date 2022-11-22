@@ -1,16 +1,21 @@
 # Elfos-TMS9118-Demos
-Version 2 of Elf/OS Demo programs for the [1802-Mini TMS9x18 Video Card](https://github.com/dmadole/1802-Mini-9918-Video) by David Madole and the [Pico/Elf v2 TMS9118/9918 Color Board](http://www.elf-emulation.com/hardware.html) by Mike Riley.  These demos are based on programs originally written by Glenn Jolly and posted in the files section of the COSMAC ELF Group in the [Glenn Jolly/TMS9118](https://groups.io/g/cosmacelf/files/Glenn%20Jolly/TMS9118) folder at groups.io.  These programs were all assembled into 1802 binary files using the [Asm/02 1802 Assembler](https://github.com/rileym65/Asm-02) by Mike Riley and linked to the TMS9X18 library file to create binaries using the [Link/02 1802 Linker](https://github.com/rileym65/Link-02) also by Mike Riley.
+These Elf/OS Demo programs are for the [1802-Mini](https://github.com/dmadole/1802-Mini) with the [1802-Mini TMS9x18 Video Card](https://github.com/dmadole/1802-Mini-9918-Video) by David Madole or a Pico/Elf v2 by Mike Riley with the [Pico/Elf v2 TMS9118/9918 Color Board](https://web.archive.org/web/20220918120827/http://www.elf-emulation.com/hardware.html) or the [Pico/Elf TMS9918 Video IO card](https://github.com/fourstix/PicoElfTMS9118VIOCard) running under the Elf/OS operating system.  These demos are based on programs originally written by Glenn Jolly and posted in the files section of the COSMAC ELF Group in the [Glenn Jolly/TMS9118](https://groups.io/g/cosmacelf/files/Glenn%20Jolly/TMS9118) folder at groups.io.  These programs were all assembled into 1802 binary files using the [Asm/02 1802 Assembler](https://github.com/rileym65/Asm-02) by Mike Riley and linked to the TMS9X18 library file to create binaries using the [Link/02 1802 Linker](https://github.com/rileym65/Link-02) also by Mike Riley.
 
-Version 2 and the TMS9X18 Library
-----------------------------------
+Current Version and the TMS9X18 Library
+---------------------------------------
 These TMS9118 demo programs were written to use the [TMS9X18 Video Library](https://github.com/fourstix/Elfos-TMS9X18-Library) so that the same code can run on multiple hardware configurations without the need to be re-assembled.  The library API communicates to the video card hardware through the [TMS9x18 Video Driver](https://github.com/fourstix/Elfos-TMS9X18-Driver) so that the program code doesn't need to be modified to match the hardware differences. The code is assembled as object files using the **asm.bat** batch file and linked to the TMS9X18 vdp_video.lib library file using the **link.bat** batch file.  The binaries created by the linker end with the **.elfos** extension.
 
-Version 1
-----------
+Original Version
+----------------
 The original version 1 TMS9118 demo programs are still available in the [version_1 branch](https://github.com/fourstix/Elfos-TMS9118-Demos/tree/version_1) on this repository.  Version 1 programs do not use the TMS9X18 library and must be assembled with the appropriate hardware port definitions in vdp.inc.
  
 Elf/OS TMS9118 Demos
 -----------------------
+## ansi
+**Usage:** ansi *text* 
+
+This program displays a string of text on the TMS9X18 display.  It supports a set of basic ASCII control codes, character escape sequences and a limited set of ANSI Graphics Sequences to manipulate text colors.  Detailed documentation is available on the [ANSI Demo](docs/ANSIDEMO.md) page.  
+
 ## blank
 This program simply displays a black screen.
 
@@ -88,6 +93,7 @@ Repository Contents
 * **/src/**  -- Common source files for assembling Elf/OS utilities.
   * asm.bat - Windows batch file to assemble source file with Asm/02 to create an object file. Use the command *asm xxx.asm* to assemble the xxx.asm file.  The object file would be named *xxx.prg*.
   * link.bat - Windows batch file to assemble source file with Asm/02 to create binary file. Use the command *link xxx.prg* to link the xxx.prg object file to the vdp_video.lib library file to create the binary file named *xxx.elfos*.
+  * ansi.asm  - Demo to write ANSI text to the display.
   * blank.asm - Demo to blank the display.
   * collision.asm - Demo to show sprite collision detection.
   * collision_noq.asm - Collision demo without using the Q bit.
@@ -111,10 +117,13 @@ Repository Contents
   * vdp.inc - Video card configuration constants 
 * **/src/lib/**  -- Library files for Elf/OS demo programs.
   * vdp_video.lib - Video card library file for the TMS9X18 video driver.
+  * **/src/lib/include/**  -- Library include files for Elf/OS demo programs.
   * charset.inc - include file with charset size and font information for the video card library.    
 * **/bin/**  -- Binary files for TMS9118 demo programs.
 * **/docs/** -- Documentation files.
    * MAKEYOUROWN.md - Tutorial to make your own image demo using [Convert9918](https://github.com/tursilion/convert9918). 
+   * CREATEIMAGE.md - Tutorial to create your own image with [Convert9918](http://harmlesslion.com/cgi-bin/onesoft.cgi?2) and convert it to a Sun Raster image file.
+   * ANSIDEMO.md - Detailed documentation for the ANSI demo program, including ASCII control codes, character escape seqeunces and supported ANSI sequences. 
 * **/lbr/**  -- Library file for TMS9118 demos. (Unpack with Elf/OS lbr command)
   * tms9118.lbr - Library file for TMS9118 demos.
 * **/pics/** -- Picture files used in the readme and demo tutorial, including sample demo image files.
