@@ -150,7 +150,7 @@ ansi:       br      main
                               ; Build information
                       
             db      11+80h             ; month
-            db      20                 ; day
+            db      24                 ; day
             dw      2022               ; year
             dw      3                  ; build
                       
@@ -296,21 +296,10 @@ do_ctrl:    glo  rc
 do_bel:     call invertColor  
             lbr  ctrl_done
 
-do_bs:      call getG2CharXY  ; get XY in R9
-            glo  r9           ; get the X position
-            lbz  bs_y         ; if x=0 adjust y to move back to previous line
-            smi  01h          ; move x back one position
-            plo  r9           
-            lbr  bs_save      
-bs_y:       ghi  r9           ; get y location
-            lbz  bs_wipe      ; if x=0, y=0 just wipe out character
-            smi  01h          ; back up one line
-            phi  r9           ; y = y-1
-            ldi  1fh          ; x = 31
-            plo  r9
-bs_save:    call setG2CharXY  ; set the new position
-bs_wipe:    ldi  ' '          ; wipe out chracter
-            call drawG2ColorChar
+do_bs:      call move_left    ; move back to previous cursor postion
+            ldi  ' '          ; wipe out chracter
+            call drawG2ColorChar  
+            call move_left    ; move back to overwrite previous character
             lbr  ctrl_done
 
 do_tab:     call getG2CharXY  ; get XY value in R9
@@ -327,22 +316,15 @@ tab_ok:     call setG2CharXY  ; update the index value
                       
 do_lf:      ghi  rc           ; check previous character
             smi  0Dh          ; ignore \r\n sequences
-            lbnz lf_ok        ;  
+            lbnz lf_ok          
             ldi  0h           ; clear previous character
             phi  rc           ; so next \n or \r is processed
             lbr  ctrl_exit
 lf_ok:      call newline  
             lbr  ctrl_done
 
-do_vt:      call getG2CharXY
-            glo  r9           ; get the x value
-            stxd              ; save x on stack
-            call newline      ; go to next line
-            call getG2CharXY  ; get xy
-            irx               ; read x from stack
-            ldx               
-            plo  r9           ; move cursor to column  
-            call setG2CharXY  ; save new y value
+do_vt:      call move_down      ; move down 2 lines
+            call move_down
             lbr  ctrl_done
 
 do_ff:      call resetColor     ; set to default color
@@ -351,17 +333,16 @@ do_ff:      call resetColor     ; set to default color
             
 do_cr:      ghi  rc           ; check previous character
             smi  0Ah          ; ignore \n\r sequences
-            lbnz cr_ok        ;  
+            lbnz cr_ok          
             ldi  0h           ; clear previous character
             phi  rc           ; so next \n or \r is processed
             lbr  ctrl_exit
 cr_ok:      call newline  
             lbr  ctrl_done      
-
-do_so:      call getInfo    ; get R7 and R8
-            ldi  0a1h       ; bold color byte (yellow on black)
-            plo  r8         ; set current color byte to bold
-            call setInfo    ; save new R7 and R8 values
+                              ; Change SO to do ANSI color shift  
+do_so:      call shift_idx    ; Shift ANSI color indexes
+            call get_color    ; get the color byte from ANSI indexes
+            call setColor     ; update color byte in memory
             lbr  ctrl_done  
             
 do_si:      call getInfo    ; get R7 and R8
@@ -409,8 +390,7 @@ set_new:    or            ; or D with M(x) to create new color byte
 ; Outputs: 
 ;
 ; Uses:    R7, R8 and R9 used internally
-; -------------------------------------------------------------------
-            
+; -------------------------------------------------------------------            
 newline:    call getG2CharXY  ; get XY value in R9
             ldi  0h
             plo  r9           ; set X = 0
@@ -423,6 +403,82 @@ newline:    call getG2CharXY  ; get XY value in R9
             phi  r9           ; set y=0 to go top line
 nl_done:    call setG2CharXY  ; update XY values
             rtn
+            
+; -------------------------------------------------------------------
+; Move cursor back one character position
+; Inputs:            
+; Outputs: 
+;
+; Uses:    R7, R8 and R9 used internally
+; -------------------------------------------------------------------            
+move_left:  call getG2CharXY  ; get XY in R9
+            glo  r9           ; get the X position
+            lbz  ml_y         ; if x=0 adjust y to move back to previous line
+            smi  01h          ; move x back one position
+            plo  r9           
+            lbr  ml_save      
+ml_y:       ghi  r9           ; get y location
+            lbz  ml_done      ; if x=0, y=0 just return
+            smi  01h          ; back up one line
+            phi  r9           ; y = y-1
+            ldi  1fh          ; x = 31
+            plo  r9
+ml_save:    call setG2CharXY  ; set the new position            
+ml_done:    rtn
+
+; -------------------------------------------------------------------
+; Move cursor back one character position
+; Inputs:            
+; Outputs: 
+;
+; Uses:    R7, R8 and R9 used internally
+; -------------------------------------------------------------------            
+move_right: call getG2CharXY  ; get XY in R9
+            glo  r9           ; get the X position
+            adi  01h          ; move x forward one position
+            plo  r9           ; save x = x+1
+            smi  32           ; check if we advanced beyond end of line           
+            lbnz mr_save      ; if not just save updated x (y is unchanged)
+            ghi  r9           ; get y location
+            adi  01h          ; advance one line
+            phi  r9           ; save y update (y = y+1)
+            smi  24           ; check if past end of screen (y=24)
+            lbz  mr_done      ; if x=32, y=24, just return (stay at end of screen)
+            ldi  0h           ; set x = 0 (y = y+1)
+            plo  r9
+mr_save:    call setG2CharXY  ; set the new position            
+mr_done:    rtn
+          
+; -------------------------------------------------------------------
+; Advance cursor down one position
+; Inputs:            
+; Outputs: 
+;
+; Uses:    R7, R8 and R9 used internally
+; -------------------------------------------------------------------            
+move_down:  call getG2CharXY  ; get XY value in R9
+            ghi  r9           ; get y value
+            adi  01h          ; add one
+            phi  r9           ; save y in r9 (x is unchanged)
+            smi  018h         ; check for overflow (line 24)
+            lbz md_done       ; don't save, to stay on bottom line      
+            call setG2CharXY  ; update XY values
+md_done:    rtn
+
+; -------------------------------------------------------------------
+; Back cursor up one line
+; Inputs:            
+; Outputs: 
+;
+; Uses:    R7, R8 and R9 used internally
+; -------------------------------------------------------------------            
+move_up:    call getG2CharXY  ; get XY value in R9
+            ghi  r9           ; get y value
+            lbz  mu_done      ; If on first line (y = 0), just exit
+            smi  01h          ; sumbract one
+            phi  r9           ; save y in r9 (x is unchanged)
+            call setG2CharXY  ; update XY values
+mu_done:    rtn
             
 ; -------------------------------------------------------------------
 ; Process escape sequence in string
@@ -638,6 +694,24 @@ blink_idx:  LOAD rd, fg_idx
             inc  rd               ; advance to background index
             ldx                   ; get modified fg_idx from M(X)
             str  rd               ; save modified fg_idx as new bg_idx
+            rtn
+
+; -------------------------------------------------------------------
+; Shift the ANSI colors by toggling bit 2 in the foreground index
+; and background indexes.
+; Inputs:            
+; Outputs: 
+;
+; Uses:    RD - pointer to ANSI index values 
+; -------------------------------------------------------------------            
+shift_idx:  LOAD rd, fg_idx
+            ldn  rd               ; get foreground index 
+            xri  04h              ; toggle bit 4 to change color
+            str  rd               ; save modified fg_idx
+            inc  rd               ; advance to background index
+            ldn  rd               ; get background index
+            xri  04h              ; toggle bit 4 to change color
+            str  rd               ; save modified bg_idx
             rtn
 
 ; -------------------------------------------------------------------

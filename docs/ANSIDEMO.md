@@ -13,10 +13,10 @@ The ASCII control characters are supported through escape sequences that begin w
 <tr><td>\b</td><td>Backspace</td><td>0x08</td><td>Move left, and erase previous character</td></tr>
 <tr><td>\t</td><td>Horizontal Tab</td><td>0x09</td><td>Move to next tab stop. (Right 4 characters)</td></tr>
 <tr><td>\n</td><td>Newline</td><td>0x0A</td><td>Move to beginning of next line.</td></tr>
-<tr><td>\v</td><td>Vertical Tab</td><td>0x0B</td><td>Move cursor down two lines, the horizontal location is not changed. (Double space)</td></tr>
+<tr><td>\v</td><td>Vertical Tab</td><td>0x0B</td><td>Move cursor down two lines, the horizontal location is not changed.</td></tr>
 <tr><td>\f</td><td>Form Feed</td><td>0x0C</td><td>Clear screen and return cursor to home.</td></tr>
 <tr><td>\r</td><td>Carriage Return</td><td>0x0D</td><td>Move to beginning of next line.</td></tr>
-<tr><td>\g</td><td>Shift Out</td><td>0x0E</td><td>Bold Text.</td></tr>
+<tr><td>\g</td><td>Shift Out</td><td>0x0E</td><td>Shift Text Colors.</td></tr>
 <tr><td>\d</td><td>Shift In</td><td>0x0F</td><td>Reset text to default style.</td></tr>
 <tr><td>\c</td><td>Device Linked Escape</td><td>0x10</td><td>Set the next byte as the color map byte.</td></tr>
 <tr><td>\e</td><td>Escape</td><td>0x1B</td><td>Escape character for ANSI sequences.</td></tr>
@@ -25,19 +25,24 @@ The ASCII control characters are supported through escape sequences that begin w
 </table>
   
 **Notes:**
-- The sequences \r\n and \n\r are interpreted as a single new line.  
-- The sequence \\ denotes a single literal backslash character.
-- The sequence \xhh denotes a hexadecimal byte value of hh. For example, \x1b would give the Escape character denoted by \e.
-- The sequence \e denotes the escape character (\x1b).
-- The sequence \c can be used to send a particular color byte such as \x4f to the display. The first four bits of the color byte denote the TMS9X18 foreground color and the lower four bits denote the TMS9X18 background color.
+- The character sequences \r\n and \n\r are interpreted as a single new line.  
+- The character sequence \\ denotes a single literal backslash character.
+- The character sequence \xhh denotes a hexadecimal byte value of hh. For example, \x1b would give the Escape character denoted by \e.
+- The character sequence \e denotes the escape character (\x1b).
+- The character sequence \c can be used to send a particular color byte such as \x4f to the display. The first four bits of the color byte denote the TMS9X18 foreground color and the lower four bits denote the TMS9X18 background color.
 - A zero (Transparent color) in the upper 4 bits will leave the foreground color unchanged, and a zero in the lower 4 bits of the color byte will leave the background color unchanged.
 - Horizontal tabs do not wrap around to the next line, and vertical tabs do not wrap around to the first line of the screen.
+- The control character \g (Shift Out) will shift the text colors according to the ANSI Shift Color table below.
+- The control character \a (Alert) will swap the text foreground and background colors.
+- The control character sequence \a\g (Alert, Shift Out) duplicates the ANSI graphics sequence \e[5m (Blink).
+- The control character \a (Alert) duplicates the ANSI graphics sequence \e[7m (Reverse).
+- The control character \d (Shift In) duplicates the ANSI graphics sequence \e[0m (Reset).
 
 ## Supported ANSI Sequences
 
 **Note:**
 - All ANSI Escape sequences start with the characters *\e[* (0x1b0x5b). 
-- An erase sequence ends with *J*, and only 1 erase sequence *\e[2J* (erase screen) is supported. 
+- An ANSI erase sequence ends with *J*, and only 1 erase sequence *\e[2J* (erase screen) is supported. 
 - All the other supported sequences are ANSI graphics sequences. 
 - All ANSI graphics sequences end with *m*. Multiple graphics sequences may appear in a single ANSI escape sequence separated by a *;* (semicolon).  
 - For example the ANSI sequence *\e[1;37;44m* would set the text foreground color to Bright White and the background color to Blue.
@@ -56,8 +61,9 @@ The ASCII control characters are supported through escape sequences that begin w
 </table>
 
 **Notes:**
-- Blink is supported by shifting and swapping the foreground and background colors, since the TMS9X18 display hardware does not directly support blinking text.
+
 - The default foreground color is Bright White and the default background color is Black.
+- Blink is supported by shifting and swapping the foreground and background colors, since the TMS9X18 display hardware does not directly support blinking text.
 
 ## TMS9X18 Color Values
 <table>
@@ -131,10 +137,10 @@ The ASCII control characters are supported through escape sequences that begin w
 <table>
 
 **Notes:**
-- The default background color is Black (\e[47m).
+- The default background color is Black (\e[40m).
 - Bright Black (\e[1;40m) and (Normal) White (\e[47m) are both mapped to the same TMS9X18 color, Gray (E).
 
-## ANSI Blink Color Shift
+## ANSI Color Shift
 
 ANSI foreground and background color indexes are represented as 4-bit hex numbers, bit numbered as bit 3,2,1,0. For the ANSI sequence \e[5m (Blink) the foreground and background colors are shifted by toggling bit 2 (xor 0x04) of the 4-bit ANSI color index value, and then the foreground and background colors are swapped.  Bit 3 of the 4-bit color index value is used as the Intensity (Bright) bit and is not changed.  The table below gives the following ANSI color pairs. The blink sequence shifts colors between the values on each row.
 
@@ -153,6 +159,8 @@ ANSI foreground and background color indexes are represented as 4-bit hex number
 <tr><td>B</td><td>Bright Yellow</td><td>F</td><td>Bright White</td></tr>
 </table>
 
+**Note:** This color shift is also used for the \g 
+(Shift Out) ASCII control character.
 
 ANSI Parser State Machine
 -------------------------
