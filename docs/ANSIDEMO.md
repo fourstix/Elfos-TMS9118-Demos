@@ -5,7 +5,7 @@ several common ASCII control characters, and it support a limited set of ANSI co
 changing text colors.
 
 ## Supported ASCII Control characters
-The ASCII control characters are supported through escape sequences that begin with the backslash (\) character.
+The ASCII control characters are supported through escape sequences that begin with the backslash (\\) character.
 
 <table>
 <tr><th>Escape sequence</th><th>ASCII Name</th><th>Hex Value</th><th>Action</th></tr>
