@@ -29,12 +29,13 @@
 #include    include/vdp.inc
 
 ; need to access charset size 
-#include    lib/charset.inc
+#include    lib/include/charset.inc
 
 #define cr  13
 #define lf  10
             ; declare external procedures in vdp_video library
             extrn  checkVideo
+            extrn  clearInfo
             extrn  beginTextMode
             extrn  setTextCharXY
             extrn  writeTextString
@@ -52,15 +53,17 @@
 textColors: br      main
             
                     ; Build information            
-            db      8+80h              ; month
-            db      31                 ; day
+            db      11+80h             ; month
+            db      20                 ; day
             dw      2022               ; year
-            dw      2                  ; build
+            dw      3                  ; build
             
             db      'Copyright 2022 by Gaston Williams',0
             
 main:       call checkVideo     ; verify vdp driver is loaded in memory
             lbdf no_driver
+            
+            call clearInfo      ; wipe out user Info from G2 Mode
 
             call FILL_CHARSET   ; fill charset buffer with text
             

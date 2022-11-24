@@ -116,10 +116,10 @@
 view:       br      start         ; Jump past build information
 
             ; Build information
-            db      9+80H         ; Month, 80H offset means extended info
-            db      1             ; Day
+            db      11+80H        ; Month, 80H offset means extended info
+            db      20            ; Day
             dw      2022          ; Year
-            dw      2             ; Build number 
+            dw      3             ; Build number 
 
             ; Must end with 0 (null)
             db      'Copyright 2022 Gaston Williams',0
