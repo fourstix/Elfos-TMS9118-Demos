@@ -1,5 +1,5 @@
 ; -------------------------------------------------------------------
-;                         viewer
+;                           view
 ; Display a Sun Raster image file on the TMS9118 Video Card
 ; Supports uncompressed and RLE compressed raster image data.
 ;
@@ -117,7 +117,7 @@ view:       br      start         ; Jump past build information
 
             ; Build information
             db      11+80H        ; Month, 80H offset means extended info
-            db      20            ; Day
+            db      30            ; Day
             dw      2022          ; Year
             dw      3             ; Build number 
 
@@ -221,7 +221,7 @@ rt_ok:
             call o_inmsg             ; display write message
             db   'Write bitmap',10,13,0
 #endif
-
+            ldi  V_VDP_CLEAR         ; initialize memory card
             call beginG2Mode         ; set up video display
             load rf, rtype           ; check the type
             ldn  rf                  ; put the type in D 

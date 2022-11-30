@@ -66,7 +66,7 @@ saucer:     br      main
               
             ; Build information            
             db      11+80h          ; month
-            db      20              ; day
+            db      30              ; day
             dw      2022            ; year
             dw      3               ; build
               
@@ -75,6 +75,7 @@ saucer:     br      main
 main:       call checkVideo         ; verify vdp driver is loaded in memory
             lbdf no_driver
 
+            ldi  V_VDP_CLEAR        ; initialize memory card
             call beginG2Mode        ; set group and start Graphics II mode            
             call sendBitmap         ; set bitmap background
             dw   START_BITMAP
@@ -166,8 +167,8 @@ UPDATE_POS: call setSpriteData              ; update sprite
             inc  rc            ; update frame counter
             lbr  NEXT_FRAME
 
-QUIT:       bn4     QUIT          ; wait for input to exit
-            ldi   V_VDP_RESET     ; reset vdp (turn off interrupts)       
+QUIT:       bn4   QUIT            ; wait for input to exit
+            ldi   V_VDP_CLEAR     ; reset vdp (turn off interrupts)       
             call  endG2Mode       ; set group back to default
             rtn                   ; return to Elf/OS
 

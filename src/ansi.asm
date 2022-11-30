@@ -150,9 +150,9 @@ ansi:       br      main
                               ; Build information
                       
             db      11+80h             ; month
-            db      24                 ; day
+            db      30                 ; day
             dw      2022               ; year
-            dw      3                  ; build
+            dw      3                 ; build
                       
             db      'Copyright 2022 by Gaston Williams',0
                       
@@ -181,7 +181,8 @@ good:       COPY  ra, rf        ; copy RA to RF
             smi  0f1h           ; check for default color
             lbz  g2ready
             
-            call beginG2Mode    ; if not loaded, clear memory start G2 Mode
+            ldi  V_VDP_CLEAR    ; if not loaded, clear memory & start G2 Mode
+            call beginG2Mode    ; set up Expansion group and vdp hardware
             ldi  0f1h           ; white text on black background as default
             call setBackground                        
             call sendNames
@@ -191,14 +192,15 @@ good:       COPY  ra, rf        ; copy RA to RF
             call setInfo 
             lbr  chkChar        ; ready to go
             
-            ; restart graphics mode 2 
-g2ready:    call set_idx        ; set ANSI color indexes from current color byte
              
+g2ready:    ldi  V_VDP_KEEP       ; restart graphics mode 2 without clearing
+            call beginG2Mode      ; set the Expansion Group, if needed             
+            call set_idx          ; set ANSI color indexes from current color byte
+          
 
-chkChar:    ldn  rf               ; check to see if end of string
+chkChar:    ldn  rf               ; check to see if end of string            
             lbz  done             ; if null, update display and exit   
             call getG2CharXY      ; get the co-ords from char to graphics address
-
             ;--- r9 has (y,x) check for beginning of line (X = 0)
             ; if beginning of line, clear pattern for 256 (32 x 8) bytes
             glo r9
@@ -212,8 +214,10 @@ draw:       lda  rf               ; get character
             call escape           ; process escape sequence
 not_esc:    call draw_it          ; process the characters
             lbr  chkChar          ; repeat until null
+            
+
 done:       call updateG2Mode     ; force refresh of display
-                        
+                             
             ldi  V_VDP_KEEP       ; set Expansion Group back to default
             call endG2Mode
             rtn

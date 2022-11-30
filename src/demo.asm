@@ -44,7 +44,7 @@ demo:       br      main
                               
             ; Build information    
             db      11+80h             ; month
-            db      20                 ; day
+            db      30                 ; day
             dw      2022               ; year
             dw      3                  ; build
                         
@@ -53,7 +53,8 @@ demo:       br      main
             
 main:       CALL checkVideo
             lbdf no_driver
-            
+
+            ldi  V_VDP_CLEAR    ; clear vdp memory            
             CALL beginG2Mode  
             
             CALL sendBitmap

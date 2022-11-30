@@ -107,7 +107,7 @@ slideshow:  br      start           ; Jump past build information
 
             ; Build info
             db      80H+11     ; Month, 80H offset means extended info
-            db      20         ; Day
+            db      30         ; Day
             dw      2022       ; Year
             dw      3        ; Current build number
 
@@ -304,6 +304,7 @@ rt_ok:     load rf, mtype           ; get color map type and verify it
 
            ; write bitmap to display
              
+           ldi  V_VDP_CLEAR         ; initialize memory card
            call beginG2Mode         ; set up video display
            load rf, rtype           ; check the type
            ldn  rf                  ; put the type in D 

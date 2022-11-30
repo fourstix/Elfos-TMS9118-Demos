@@ -69,7 +69,7 @@ spaceship2: br      main
                                                             
             ; Build information    
             db      11+80h             ; month
-            db      20                 ; day
+            db      30                 ; day
             dw      2022               ; year
             dw      3                  ; build
                                     
@@ -80,6 +80,7 @@ spaceship2: br      main
 main:       CALL checkVideo     ; make sure TMS9x18 driver is loaded
             lbdf no_driver
             
+            ldi  V_VDP_CLEAR    ; initialize memory card
             CALL beginG2Mode    ; set group and start Graphics II mode
             
             CALL sendBitmap     ; update vdp pattern table
