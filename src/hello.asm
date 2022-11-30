@@ -59,7 +59,7 @@ hello:      br      main
             
             ; Build information            
             db      11+80h             ; month
-            db      20                 ; day
+            db      30                 ; day
             dw      2022               ; year
             dw      3                  ; build
             

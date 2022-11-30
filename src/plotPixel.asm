@@ -73,7 +73,7 @@ plotPixel:  br      main
             ; Build information
                       
             db      11+80h             ; month
-            db      20                 ; day
+            db      30                 ; day
             dw      2022               ; year
             dw      3                  ; build
                       
@@ -82,6 +82,7 @@ plotPixel:  br      main
 main:       call checkVideo     ; verify vdp driver is loaded in memory
             lbdf no_driver
 
+            ldi  V_VDP_CLEAR    ; initialize memory card
             call beginG2Mode    ; start graphics mode 2
 
             call sendColors

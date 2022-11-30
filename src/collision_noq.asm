@@ -45,7 +45,7 @@ collision_noq:  br      main
                                                     
                 ; Build information                          
                 db      11+80h             ; month
-                db      20                 ; day
+                db      30                 ; day
                 dw      2022               ; year
                 dw      3                  ; build
                           
@@ -60,6 +60,7 @@ main:       call checkVideo   ; verify vdp driver is loaded in memory
             load  rc, END_SPRITE_ATTR-SPRITE_ATTR
             call  f_memcpy        ; rd <- rf (rc bytes)
 
+            ldi  V_VDP_CLEAR      ; clear vdp memory
             call beginG2Mode        
             ldi  COLOR_GRAY        
             call setBackground    ; just single background color              
@@ -124,7 +125,7 @@ UPDATE_POS: call setSpriteData
             inc  rc
             lbr  NEXT_FRAME
 
-QUIT:       ldi  V_VDP_RESET      ; Set D to reset vdp (turn interrupt off)
+QUIT:       ldi  V_VDP_CLEAR      ; Set D to reset vdp (turn interrupt off)
             call endG2Mode        ; set group back to default
             rtn                   ; return to Elf/OS
                 

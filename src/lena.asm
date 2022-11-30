@@ -46,7 +46,7 @@ lena:       br      main
             ; Build information
                         
             db      11+80h             ; month
-            db      20                 ; day
+            db      30                 ; day
             dw      2022               ; year
             dw      3                  ; build
                         
@@ -57,6 +57,7 @@ lena:       br      main
 main:       call checkVideo     ; make sure tms9x18 driver is loaded
             lbdf no_driver
             
+            ldi  V_VDP_CLEAR    ; initialize memory card
             call beginG2Mode    ; start TMS9x18 Graphics II mode
             
             call sendBitmap     ; update vpd pattern table

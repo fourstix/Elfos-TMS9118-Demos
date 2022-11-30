@@ -54,7 +54,7 @@ textColors: br      main
             
                     ; Build information            
             db      11+80h             ; month
-            db      20                 ; day
+            db      30                 ; day
             dw      2022               ; year
             dw      3                  ; build
             
@@ -149,7 +149,7 @@ NUM_OK:     mov  r7, 0
             lbr  COLOR_LOOP
 
 QUIT:       call setGroup       ; set expansion group back to video card
-            ldi V_VDP_RESET     ; reset the display
+            ldi V_VDP_CLEAR     ; reset the display
             call endTextMode
             rtn                 ; return to monitor
 

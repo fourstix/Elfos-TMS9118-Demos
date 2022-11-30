@@ -49,7 +49,7 @@ V_CHAR_NAMES:       equ 4800h
 
 ; Other VDP constants
 V_VDP_KEEP:         equ  00h 
-V_VDP_RESET:        equ  0FFh
+V_VDP_CLEAR:        equ  0FFh
 
 ; Sun Raster file
 BITMAP_OFFSET:      equ 01820h    ; after header and color map (uncompressed only)
