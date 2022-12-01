@@ -21,6 +21,7 @@ The ASCII control characters are supported through escape sequences that begin w
 <tr><td>\c</td><td>Device Linked Escape</td><td>0x10</td><td>Set the next byte as the color map byte.</td></tr>
 <tr><td>\e</td><td>Escape</td><td>0x1B</td><td>Escape character for ANSI sequences.</td></tr>
 <tr><td>\\</td><td>Backslash</td><td>0x5C</td><td>Literal backslash character.</td</tr>
+<tr><td>\s</td><td>Space</td><td>0x20</td><td>Escape sequence for space character.</td></tr>
 <tr><td>\x</td><td>Hexadecimal byte</td><td>0xhh</td><td>Treat next two characters hh as a Hexadecimal byte value.</td></tr>
 </table>
   
@@ -29,6 +30,7 @@ The ASCII control characters are supported through escape sequences that begin w
 - The character sequence \\ denotes a single literal backslash character.
 - The character sequence \xhh denotes a hexadecimal byte value of hh. For example, \x1b would give the Escape character denoted by \e.
 - The character sequence \e denotes the escape character (\x1b).
+- The character sequence \s denotes the space character (\x20).
 - The character sequence \c can be used to send a particular color byte such as \x4f to the display. The first four bits of the color byte denote the TMS9X18 foreground color and the lower four bits denote the TMS9X18 background color.
 - A zero (Transparent color) in the upper 4 bits will leave the foreground color unchanged, and a zero in the lower 4 bits of the color byte will leave the background color unchanged.
 - Horizontal tabs do not wrap around to the next line, and vertical tabs do not wrap around to the first line of the screen.

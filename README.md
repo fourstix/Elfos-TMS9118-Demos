@@ -7,7 +7,7 @@ These TMS9118 demo programs were written to use the [TMS9X18 Video Library](http
 
 Original Version
 ----------------
-The original version 1 TMS9118 demo programs are still available in the [version_1 branch](https://github.com/fourstix/Elfos-TMS9118-Demos/tree/version_1) on this repository.  Version 1 programs do not use the TMS9X18 library and must be assembled with the appropriate hardware port definitions in vdp.inc.
+The original version 1 TMS9118 demo programs are still available as [Release v1.4](https://github.com/fourstix/Elfos-TMS9118-Demos/releases/tag/v1.4) on this repository.  Version 1 programs do not use the TMS9X18 library and must be assembled with the appropriate hardware port definitions in vdp.inc.
  
 Elf/OS TMS9118 Demos
 -----------------------
