@@ -149,10 +149,10 @@ ansi:       br      main
                       
                               ; Build information
                       
-            db      11+80h             ; month
-            db      30                 ; day
+            db      12+80h             ; month
+            db      1                  ; day
             dw      2022               ; year
-            dw      3                 ; build
+            dw      3                  ; build
                       
             db      'Copyright 2022 by Gaston Williams',0
                       
@@ -551,13 +551,18 @@ nl_chk:     smi  07h              ; check for \n
             
 cr_chk:     smi  04h              ; check for \r
             lbnf unknown          ; if negative then unknown
-            lbnz tab_chk          ; if not, check for next escape sequence
+            lbnz sp_chk           ; if not, check for next escape sequence
             ldi  0Dh              ; CR control character (carriage return)
             plo  rc
             lbr  escaped
+
+sp_chk:     smi  01h              ; check for \s
+            lbnz tab_chk          ; if not, check for next escape sequence
+            ldi  20h              ; SPACE character or ' '
+            plo  rc
+            lbr  escaped            
                         
-tab_chk:    smi  02h              ; check for \t         
-            lbnf unknown          ; if negative then unknown
+tab_chk:    smi  01h              ; check for \t         
             lbnz vt_chk           ; if not, check for next escape sequence
             ldi  09h              ; TAB control character (horizontal tab)
             plo  rc
