@@ -107,9 +107,9 @@ slideshow:  br      start    ; Jump past build information
 
             ; Build info
             db      80H+1    ; Month, 80H offset means extended info
-            db      8        ; Day
+            db      10       ; Day
             dw      2024     ; Year
-            dw      6        ; Current build number
+            dw      7        ; Current build number
 
             ; Must end with 0 (null)
             db      'Copyright 2024 Gaston Williams',0
@@ -170,9 +170,6 @@ dirloop:   ldi     0                ; need to read 32 bytes
            ldi     32
            plo     rc
            load    rf, buffer       ; setup transfer buffer
-           phi     rf
-           ldi     low buffer
-           plo     rf
            load    rd, fildes       ; set file descriptor for read
            call    o_read           ; read files from dir
            glo     rc               ; see if eof was hit
